@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>磯永吉小屋機器人互動系統 服務藍圖</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .blueprint-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .title {
+            background: #9e9e9e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .layer {
+            display: flex;
+            min-height: 140px;
+            border-bottom: 2px solid #ddd;
+            position: relative;
+        }
+        
+        .layer:last-child {
+            border-bottom: none;
+        }
+        
+        .layer-label {
+            background: #4a4a4a;
+            color: white;
+            width: 220px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 15px;
+            text-align: center;
+            line-height: 1.3;
+            gap: 15px;
+        }
+        
+        .tech-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .tech-label .icon {
+            width: 30px;
+            height: 30px;
+            font-size: 12px;
+        }
+        
+        .tech-label .icon-text {
+            font-size: 11px;
+            color: #ccc;
+        }
+        
+        .layer-content {
+            flex: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            align-items: center;
+            position: relative;
+        }
+        
+        .evidence { background: #e3f2fd; }
+        .user-action { background: #f3e5f5; }
+        .frontline { background: #e8f5e8; }
+        .backend { background: #fff3e0; }
+        .support { background: #fce4ec; }
+        
+        .action-box {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px 12px;
+            font-size: 13px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .action-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .process-flow {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+            font-style: italic;
+        }
+        
+        /* 箭頭樣式 */
+        .action-box::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid #666;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+        
+        .action-box:last-child::after {
+            display: none;
+        }
+        
+        /* 垂直箭頭 */
+        .vertical-arrow {
+            position: absolute;
+            left: 50%;
+            bottom: -15px;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #666;
+            z-index: 10;
+        }
+        
+        .visibility-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            height: 3px;
+            background: linear-gradient(to right, #333 50%, transparent 50%);
+            background-size: 10px 100%;
+            z-index: 15;
+        }
+        
+        .visibility-line::before {
+            content: "Line of Visibility";
+            position: absolute;
+            right: 20px;
+            top: -15px;
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        .tech-section {
+            grid-column: 1 / 3;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .tech-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .android-icon { background: #4CAF50; }
+        .python-icon { background: #3776ab; }
+        .js-icon { background: #f7df1e; color: #333; }
+        
+        .icon-label {
+            font-size: 11px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        /* 特殊網格佈局調整 */
+        .evidence .layer-content {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .layer-content {
+            grid-template-columns: repeat(5, 1fr);
+        }
+    </style>
+</head>
+<body>
+    <div class="blueprint-container">
+        <div class="title">Service Blueprint - 磯永吉小屋機器人互動系統</div>
+        
+        <!-- Physical Evidence Layer -->
+        <div class="layer evidence">
+            <div class="layer-label">Physical Evidence<br>實體證據</div>
+            <div class="layer-content">
+                <div class="action-box">
+                    磯永吉小屋<br>展覽空間
+                    <div class="process-flow">歷史建築場域</div>
+                </div>
+                <div class="action-box">
+                    Kebbi機器人<br>硬體
+                    <div class="process-flow">實體互動介面</div>
+                </div>
+                <div class="action-box">
+                    視覺表情<br>影片
+                    <div class="process-flow">情感表達系統</div>
+                </div>
+                <div class="action-box">
+                    語音互動<br>介面
+                    <div class="process-flow">聲音輸入輸出</div>
+                </div>
+                <div class="vertical-arrow"></div>
+            </div>
+        </div>
+        
+        <!-- User Action Layer -->
+        <div class="layer user-action">
+            <div class="layer-label">User Action<br>使用者行為</div>
+            <div class="layer-content">
+                <div class="action-box">
+                    參觀展覽
+                    <div class="process-flow">了解歷史背景</div>
+                </div>
+                <div class="action-box">
+                    接近機器人
+                    <div class="process-flow">觸發感應器</div>
+                </div>
+                <div class="action-box">
+                    語音回答
+                    <div class="process-flow">回應問題</div>
+                </div>
+                <div class="action-box">
+                    觀看表情
+                    <div class="process-flow">接收視覺回饋</div>
+                </div>
+                <div class="action-box">
+                    完成互動
+                    <div class="process-flow">離開或重新開始</div>
+                </div>
+                <div class="vertical-arrow"></div>
+            </div>
+        </div>
+        
+        <!-- Front-line Staff Action Layer -->
+        <div class="layer frontline">
+            <div class="layer-label">
+                <div>Front-line Staff<br>Action<br>前台行為</div>
+                <div class="tech-label">
+                    <div class="icon android-icon">A</div>
+                    <div class="icon-text">Android<br>MVVM</div>
+                </div>
+            </div>
+            <div class="layer-content">
+                <div class="action-box">
+                    自我介紹
+                    <div class="process-flow">歡迎與說明</div>
+                </div>
+                <div class="action-box">
+                    知識問答
+                    <div class="process-flow">三個教育問題</div>
+                </div>
+                <div class="action-box">
+                    回饋評估
+                    <div class="process-flow">判斷答案正確性</div>
+                </div>
+                <div class="action-box">
+                    體驗收集
+                    <div class="process-flow">詢問參觀心得</div>
+                </div>
+                <div class="action-box">
+                    道別重置
+                    <div class="process-flow">結束互動</div>
+                </div>
+                <div class="visibility-line"></div>
+                <div class="vertical-arrow"></div>
+            </div>
+        </div>
+        
+        <!-- Behind-the-scenes Staff Actions Layer -->
+        <div class="layer backend">
+            <div class="layer-label">
+                <div>Behind-the-scenes<br>staff actions<br>後台行為</div>
+                <div class="tech-label">
+                    <div class="icon python-icon">Py</div>
+                    <div class="icon-text">Flask<br>Server</div>
+                </div>
+            </div>
+            <div class="layer-content">
+                <div class="action-box">
+                    STT 語音識別
+                    <div class="process-flow">Speech to Text</div>
+                </div>
+                <div class="action-box">
+                    文字處理
+                    <div class="process-flow">理解使用者意圖</div>
+                </div>
+                <div class="action-box">
+                    AI 生成回應
+                    <div class="process-flow">OpenAI GPT-4</div>
+                </div>
+                <div class="action-box">
+                    TTS 語音合成
+                    <div class="process-flow">Text to Speech</div>
+                </div>
+                <div class="action-box">
+                    表情動作
+                    <div class="process-flow">情感表達控制</div>
+                </div>
+                <div class="vertical-arrow"></div>
+            </div>
+        </div>
+        
+        <!-- Support Infrastructure Layer -->
+        <div class="layer support">
+            <div class="layer-label">
+                <div>Support<br>infrastructure and<br>systems<br>支援基礎設施</div>
+                <div class="tech-label">
+                    <div class="icon js-icon">API</div>
+                    <div class="icon-text">REST<br>API</div>
+                </div>
+            </div>
+            <div class="layer-content">
+                <div class="action-box">
+                    用戶管理
+                    <div class="process-flow">Session控制</div>
+                </div>
+                <div class="action-box">
+                    狀態追蹤
+                    <div class="process-flow">對話流程管理</div>
+                </div>
+                <div class="action-box">
+                    資料儲存
+                    <div class="process-flow">對話歷史記錄</div>
+                </div>
+                <div class="action-box">
+                    系統監控
+                    <div class="process-flow">錯誤處理</div>
+                </div>
+                <div class="action-box">
+                    API整合
+                    <div class="process-flow">外部服務連接</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 標題 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="機器人控制系統"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- 連接狀態 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="連接狀態: "
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tvConnectionStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未連接"
+            android:textSize="16sp"
+            android:textColor="#FF5722"/>
+
+    </LinearLayout>
+
+    <!-- 註冊區域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/etMyId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="輸入機器人ID"
+            android:maxLines="1"/>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="註冊機器人"
+            android:layout_marginStart="8dp"/>
+
+    </LinearLayout>
+
+    <!-- 狀態顯示 -->
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="等待連接..."
+        android:textColor="#666666"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="#F0F0F0"
+        android:textSize="16sp"/>
+
+    <!-- 角色顯示 -->
+    <TextView
+        android:id="@+id/tvAssignedRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="角色: 未分配"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="#E3F2FD"
+        android:textColor="#1976D2"/>
+
+    <!-- 當前指令 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="當前狀態:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvCurrentCommand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="待命中..."
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="#F5F5F5"
+        android:minHeight="60dp"/>
+
+</LinearLayout>

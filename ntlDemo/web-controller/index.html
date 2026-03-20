@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Performance Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            height: calc(100vh - 200px);
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .control-panel {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .control-panel:last-child {
+            border-bottom: none;
+        }
+
+        .control-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff4757;
+            transition: background 0.3s;
+        }
+
+        .status-dot.connected {
+            background: #2ed573;
+        }
+
+        .robot-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .robot-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            background: #f8f9fa;
+        }
+
+        .robot-item.online {
+            background: #e8f5e8;
+            border-left: 4px solid #2ed573;
+        }
+
+        .control-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #3742fa;
+            color: white;
+        }
+
+        .btn-success {
+            background: #2ed573;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffa502;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .script-area {
+            display: grid;
+            grid-template-rows: 1fr 100px;
+            gap: 20px;
+        }
+
+        #scriptContent {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-height: calc(100vh - 400px);
+        }
+
+        .script-section {
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            background: #3742fa;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .script-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+
+        .play-button {
+            background: #2ed573;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .play-button:hover {
+            background: #26d062;
+            transform: scale(1.1);
+        }
+
+        .play-button.playing {
+            background: #ff4757;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .robot-indicator {
+            min-width: 60px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .robot-ai-yue {
+            background: #e8f4ff;
+            color: #0066cc;
+            border: 2px solid #0066cc;
+        }
+
+        .robot-ai-read {
+            background: #fff0e8;
+            color: #cc6600;
+            border: 2px solid #cc6600;
+        }
+
+        .robot-oreo {
+            background: #f0e8ff;
+            color: #6600cc;
+            border: 2px solid #6600cc;
+        }
+
+        .line-content {
+            flex: 1;
+        }
+
+        .speaker {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .dialogue {
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .actions {
+            margin-top: 5px;
+        }
+
+        .action-tag {
+            display: inline-block;
+            background: #e8f4ff;
+            color: #0066cc;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+
+        .action-tag.gesture {
+            background: #fff0e8;
+            color: #cc6600;
+        }
+
+        .action-tag.video_call {
+            background: #f0e8ff;
+            color: #6600cc;
+        }
+
+        .log-area {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            color: #fff;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .timestamp {
+            color: #ffa502;
+            margin-right: 10px;
+        }
+
+        .script-upload {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #scriptFile {
+            display: none;
+        }
+
+        .control-mode-indicator {
+            background: #2ed573;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 10px;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(46, 213, 115, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(46, 213, 115, 0.8);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Robot Performance Controller</h1>
+            <p>高齡創新生活實驗室 機器人表演控制系統</p>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="control-panel">
+                    <h3>Connection Status</h3>
+                    <div class="connection-status">
+                        <div class="status-dot" id="connectionDot"></div>
+                        <span id="connectionStatus">Disconnected</span>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>Connected Robots</h3>
+                    <div class="robot-list" id="robotList">
+                        <div class="robot-item">
+                            <span class="robot-emoji">🤖</span>
+                            <span>No robots connected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>Performance Controls</h3>
+                    <!-- <div id="controlModeIndicator" class="control-mode-indicator" style="display: none;">
+                        🎭 控制模式已啟動
+                    </div> -->
+                    <div class="control-buttons">
+                        <button class="btn btn-primary" id="assignRoles">🎭 Assign Roles</button>
+                        <button class="btn btn-success" id="controlModeBtn">🚀 Start Control Mode</button>
+                        <button class="btn btn-primary" id="videoCallBtn">📹 Start Video Call</button>
+                        <button class="btn btn-danger" id="emergencyStop">⏹️ Emergency Stop</button>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>Script Controls</h3>
+                    <div class="script-controls">
+                        <div class="script-upload">
+                            <input type="file" id="scriptFile" accept=".txt,.md">
+                            <button class="btn btn-primary" id="loadScript">📄 Load Script</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="script-area">
+                <div id="scriptContent">
+                    <div style="text-align: center; color: #666; margin-top: 100px;">
+                        <h3>Load a script to begin</h3>
+                        <p>Upload your performance script file to control the robots</p>
+                    </div>
+                </div>
+
+                <div class="log-area" id="logArea">
+                    <div class="log-entry">
+                        <span class="timestamp">[00:00:00]</span>
+                        <span>System ready - Load a script to begin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class RobotController {
+            constructor() {
+                this.ws = null;
+                this.isConnected = false;
+                this.robots = new Map();
+                this.currentScript = null;
+                this.isRoleAssigned = false;
+                this.playingLines = new Set();
+                this.isControlModeActive = false;
+                this.isVideoCallActive = false;
+                this.init();
+            }
+
+            init() {
+                this.connectWebSocket();
+                this.setupEventListeners();
+                this.updateConnectionStatus();
+            }
+
+            connectWebSocket() {
+                const wsUrl = "wss://sociallab.duckdns.org/ntl_demo/";
+                this.ws = new WebSocket(wsUrl);
+
+                this.ws.onopen = () => {
+                    this.isConnected = true;
+                    this.updateConnectionStatus();
+                    this.register();
+                    this.log("Connected to server");
+                };
+
+                this.ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    this.handleMessage(data);
+                };
+
+                this.ws.onerror = (error) => {
+                    this.log("WebSocket error: " + error.message);
+                };
+
+                this.ws.onclose = () => {
+                    this.isConnected = false;
+                    this.updateConnectionStatus();
+                    this.log("Disconnected from server");
+                    setTimeout(() => this.connectWebSocket(), 3000);
+                };
+            }
+
+            register() {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({
+                        type: "register",
+                        id: "controller_" + Date.now(),
+                        role: "controller"
+                    }));
+                }
+            }
+
+            handleMessage(data) {
+                switch (data.type) {
+                    case "register_success":
+                        this.log("Registered as controller");
+                        break;
+                    case "start_video_call":
+                        this.isVideoCallActive = true;
+                        this.log(`Video call started: ${data.from} → ${data.to}`);
+                        break;
+                    case "robot_list":
+                        this.updateRobotList(data.robots);
+                        // 檢查是否所有機器人都斷線
+                        if (data.robots.length === 0) {
+                            this.isControlModeActive = false;
+                            this.isVideoCallActive = false;
+                            this.updateControlModeUI(false);
+                        }
+                        break;
+                    case "command_sent":
+                        this.log(`Command sent to ${data.targetRobot}: ${data.action}`);
+                        break;
+                    case "script_loaded":
+                        this.log("Script loaded successfully");
+                        break;
+
+                    default:
+                        this.log(`Unknown message: ${data.type}`);
+                }
+            }
+
+            assignRoles() {
+                const assignments = {};
+                let roleIndex = 0;
+                const roles = ["AI閱", "AI讀"];
+
+                this.robots.forEach((robot, robotId) => {
+                    if (roleIndex < roles.length) {
+                        assignments[robot.id] = roles[roleIndex];
+                        roleIndex++;
+                    }
+                });
+
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({
+                        type: "assign_roles",
+                        assignments: assignments
+                    }));
+                }
+                this.log("Roles assigned to robots");
+            }
+
+            startControlMode() {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({
+                        type: "start_control_mode",
+                        mode: "performance",
+                        participants: Array.from(this.robots.keys())
+                    }));
+                }
+                this.isControlModeActive = true;
+                this.updateControlModeUI(true);
+                this.log("Control mode started");
+            }
+
+            stopControlMode() {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({
+                        type: "stop_control_mode"
+                    }));
+                }
+                this.isControlModeActive = false;
+                this.updateControlModeUI(false);
+                this.log("Control mode stopped");
+            }
+
+            updateControlModeUI(isActive) {
+                // const indicator = document.getElementById("controlModeIndicator");
+                const controlBtn = document.getElementById("controlModeBtn");
+                const scriptButtons = document.querySelectorAll(".play-button");
+
+                if (isActive) {
+                    // indicator.style.display = "block";
+                    controlBtn.textContent = "⏹️ Stop Control Mode";
+                    controlBtn.className = "btn btn-warning";
+                    scriptButtons.forEach(btn => btn.disabled = false);
+                } else {
+                    // indicator.style.display = "none";
+                    controlBtn.textContent = "🚀 Start Control Mode";
+                    controlBtn.className = "btn btn-success";
+                    scriptButtons.forEach(btn => btn.disabled = true);
+                }
+            }
+
+            startVideoCall() {
+                if (this.robots.size >= 2) {
+                    const robotIds = Array.from(this.robots.keys());
+                    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                        this.ws.send(JSON.stringify({
+                            type: "start_video_call",
+                            from: robotIds[0],
+                            to: robotIds[1]
+                        }));
+                    }
+                    this.log(`Video call initiated: ${robotIds[0]} → ${robotIds[1]}`);
+                } else {
+                    this.log("Need at least 2 robots for video call");
+                }
+            }
+
+            endVideoCall() {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({
+                        type: "end_video_call"
+                    }));
+                }
+                this.isVideoCallActive = false;
+                this.log("Video call ended");
+            }
+
+            stopAllRobots() {
+                this.log("Emergency stop - all robots stopped");
+                this.robots.forEach((robot, name) => {
+                    this.sendRobotCommand(name, "stop", "");
+                });
+                this.playingLines.clear();
+                document.querySelectorAll(".play-button.playing").forEach((button) => {
+                    button.classList.remove("playing");
+                    button.innerHTML = "▶️";
+                });
+            }
+
+            updateConnectionStatus() {
+                const dot = document.getElementById("connectionDot");
+                const status = document.getElementById("connectionStatus");
+
+                if (this.isConnected) {
+                    dot.classList.add("connected");
+                    status.textContent = "Connected";
+                } else {
+                    dot.classList.remove("connected");
+                    status.textContent = "Disconnected";
+                }
+            }
+
+            updateRobotList(robots) {
+                const container = document.getElementById("robotList");
+                container.innerHTML = "";
+                this.robots.clear();
+
+                if (robots.length === 0) {
+                    container.innerHTML = `
+                        <div class="robot-item">
+                            <span class="robot-emoji">🤖</span>
+                            <span>No robots connected</span>
+                        </div>
+                    `;
+                    this.log("Robot list cleared - no robots connected");
+                    return;
+                }
+
+                robots.forEach((robot) => {
+                    const item = document.createElement("div");
+                    item.className = "robot-item online";
+                    item.innerHTML = `
+                        <span class="robot-emoji">🤖</span>
+                        <span>${robot.name || robot.id}</span>
+                    `;
+                    container.appendChild(item);
+                    this.robots.set(robot.name || robot.id, robot);
+                });
+
+                this.log(`Robot list updated: ${robots.map((r) => r.name || r.id).join(", ")} (${robots.length} robots)`);
+            }
+
+            setupEventListeners() {
+                document.getElementById("loadScript").addEventListener("click", () => {
+                    document.getElementById("scriptFile").click();
+                });
+
+                document.getElementById("scriptFile").addEventListener("change", (e) => {
+                    this.loadScript(e.target.files[0]);
+                });
+
+                document.getElementById("assignRoles").addEventListener("click", () => {
+                    this.assignRoles();
+                });
+
+                document.getElementById("controlModeBtn").addEventListener("click", () => {
+                    const btn = document.getElementById("controlModeBtn");
+
+                    if (this.isControlModeActive) {
+                        this.stopControlMode();
+                        btn.textContent = "🚀 Start Control Mode";
+                        btn.className = "btn btn-success";
+                    } else {
+                        this.startControlMode();
+                        btn.textContent = "⏹️ Stop Control Mode";
+                        btn.className = "btn btn-warning";
+                    }
+                });
+
+                document.getElementById("videoCallBtn").addEventListener("click", () => {
+                    const btn = document.getElementById("videoCallBtn");
+
+                    if (this.isVideoCallActive) {
+                        // 結束視訊
+                        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                            this.ws.send(JSON.stringify({ type: "end_video_call" }));
+                        }
+                        this.isVideoCallActive = false;
+                        btn.textContent = "📹 Start Video Call";
+                        btn.className = "btn btn-primary";
+                        this.log("Video call ended");
+                    } else {
+                        // 開始視訊
+                        this.startVideoCall();
+                        this.isVideoCallActive = true;
+                        btn.textContent = "📞 End Video Call";
+                        btn.className = "btn btn-danger";
+                    }
+                });
+
+                document.getElementById("emergencyStop").addEventListener("click", () => {
+                    this.stopAllRobots();
+                });
+            }
+
+            async loadScript(file) {
+                if (!file) return;
+
+                try {
+                    const content = await file.text();
+                    this.currentScript = this.parseScript(content);
+                    this.renderScript();
+
+                    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                        this.ws.send(JSON.stringify({
+                            type: "load_script",
+                            scriptId: "current_script",
+                            scriptContent: content
+                        }));
+                    }
+
+                    this.log(`Loaded script: ${file.name}`);
+                } catch (error) {
+                    this.log(`Error loading script: ${error.message}`);
+                }
+            }
+
+            parseScript(content) {
+                const lines = content.split("\n");
+                const script = { title: "", sections: [] };
+                let currentSection = null;
+                let lineId = 0;
+
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed) continue;
+
+                    if (trimmed.startsWith("**【") && trimmed.endsWith("】**")) {
+                        currentSection = {
+                            title: trimmed.replace(/\*\*【|】\*\*/g, ""),
+                            lines: []
+                        };
+                        script.sections.push(currentSection);
+                        continue;
+                    }
+
+                    const dialogMatch = trimmed.match(/^\*\*(.*?)\*\*：(.+)$/);
+                    if (dialogMatch && currentSection) {
+                        const [, speaker, rawContent] = dialogMatch;
+                        const { actions, cleanContent } = this.extractActions(rawContent.trim());
+
+                        currentSection.lines.push({
+                            id: ++lineId,
+                            speaker: speaker.trim(),
+                            content: cleanContent, // 使用清理過的內容
+                            robot: this.extractRobotName(speaker),
+                            actions: actions
+                        });
+                    }
+                }
+
+                return script;
+            }
+
+            extractRobotName(speaker) {
+                // 必須先檢查組合情況
+                if (speaker.includes("AI閱、AI讀") || speaker.includes("AI閱 AI讀")) {
+                    return "AI閱,AI讀";
+                }
+                if (speaker.includes("AI閱")) return "AI閱";
+                if (speaker.includes("AI讀")) return "AI讀";
+                if (speaker.includes("OREO")) return "OREO";
+                return "";
+            }
+
+            extractActions(content) {
+                const actions = [];
+                let cleanContent = content;
+
+                // Extract motion in parentheses: (666_XX_Motion)
+                const motionMatch = content.match(/\(([^)]+)\)/);
+                if (motionMatch) {
+                    const motionText = motionMatch[1];
+                    actions.push({ type: "gesture", value: motionText });
+                    cleanContent = cleanContent.replace(motionMatch[0], "").trim();
+                }
+
+                // Extract emotion in parentheses: (emotion)
+                const emotionMatch = cleanContent.match(/\(([^)]+)\)/);
+                if (emotionMatch) {
+                    const emotionText = emotionMatch[1];
+                    actions.push({ type: "emotion", value: emotionText });
+                    cleanContent = cleanContent.replace(emotionMatch[0], "").trim();
+                }
+
+                return { actions, cleanContent };
+            }
+
+            renderScript() {
+                const container = document.getElementById("scriptContent");
+                container.innerHTML = "";
+
+                if (!this.currentScript || !this.currentScript.sections.length) {
+                    container.innerHTML = `
+                        <div style="text-align: center; color: #666; margin-top: 100px;">
+                            <h3>No script loaded</h3>
+                            <p>Upload a script file to begin</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                this.currentScript.sections.forEach((section) => {
+                    const sectionDiv = document.createElement("div");
+                    sectionDiv.className = "script-section";
+                    sectionDiv.innerHTML = `<div class="section-header">${section.title}</div>`;
+
+                    section.lines.forEach((line) => {
+                        const lineDiv = document.createElement("div");
+                        lineDiv.className = "script-line";
+                        lineDiv.innerHTML = this.renderScriptLine(line);
+                        sectionDiv.appendChild(lineDiv);
+                    });
+
+                    container.appendChild(sectionDiv);
+                });
+
+                // 更新播放按鈕狀態
+                this.updateControlModeUI(this.isControlModeActive);
+            }
+
+            renderScriptLine(line) {
+                const robotClass = this.getRobotClass(line.robot);
+                const actionsHtml = line.actions
+                    .map(action => {
+                        const displayValue = action.type === "gesture" ?
+                            action.value : // Show full motion ID
+                            action.value;  // Show emotion name
+                        return `<span class="action-tag ${action.type}">${displayValue}</span>`;
+                    })
+                    .join("");
+
+                return `
+        <button class="play-button" onclick="controller.playLine(${line.id})" ${!this.isControlModeActive ? 'disabled' : ''}>▶️</button>
+        <div class="robot-indicator ${robotClass}">${line.robot || "?"}</div>
+        <div class="line-content">
+            <div class="speaker">${line.speaker}</div>
+            <div class="dialogue">${line.content}</div>
+            <div class="actions">${actionsHtml}</div>
+        </div>
+    `;
+            }
+
+            getRobotClass(robotName) {
+                switch (robotName) {
+                    case "AI閱": return "robot-ai-yue";
+                    case "AI讀": return "robot-ai-read";
+                    case "OREO": return "robot-oreo";
+                    default: return "robot-unknown";
+                }
+            }
+
+            playLine(lineId) {
+                if (!this.isControlModeActive) {
+                    this.log("Please start control mode first");
+                    return;
+                }
+
+                if (!this.currentScript) return;
+
+                let targetLine = null;
+                for (const section of this.currentScript.sections) {
+                    targetLine = section.lines.find((line) => line.id === lineId);
+                    if (targetLine) break;
+                }
+
+                if (!targetLine || !targetLine.robot) {
+                    this.log(`Line ${lineId} not found or no robot specified`);
+                    return;
+                }
+
+                // 處理多機器人情況
+                const targetRobots = targetLine.robot.split(',');
+                const availableRobots = targetRobots.filter(robot => this.robots.has(robot.trim()));
+
+                if (availableRobots.length === 0) {
+                    this.log(`No robots available for line ${lineId}: ${targetLine.robot}`);
+                    return;
+                }
+
+                this.playingLines.add(lineId);
+                this.updatePlayButton(lineId, true);
+
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    const { actions, cleanContent } = this.extractActions(targetLine.content);
+
+                    this.ws.send(JSON.stringify({
+                        type: "play_line",
+                        scriptId: "current_script",
+                        lineId: lineId,
+                        line: {
+                            ...targetLine,
+                            content: cleanContent,
+                            actions: [...(targetLine.actions || []), ...actions]
+                        }
+                    }));
+                }
+
+                this.log(`Playing line ${lineId}: ${targetLine.robot} - "${targetLine.content}"`);
+
+                setTimeout(() => {
+                    this.playingLines.delete(lineId);
+                    this.updatePlayButton(lineId, false);
+                }, 3000);
+            }
+
+            updatePlayButton(lineId, isPlaying) {
+                const buttons = document.querySelectorAll(".play-button");
+                buttons.forEach((button, index) => {
+                    if (index + 1 === lineId) {
+                        if (isPlaying) {
+                            button.classList.add("playing");
+                            button.innerHTML = "⏸️";
+                        } else {
+                            button.classList.remove("playing");
+                            button.innerHTML = "▶️";
+                        }
+                    }
+                });
+            }
+
+            sendRobotCommand(robotName, action, content, parameters = {}) {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({
+                        type: "robot_command",
+                        targetRobot: robotName,
+                        action: action,
+                        content: content,
+                        parameters: parameters
+                    }));
+                    this.log(`Command sent to ${robotName}: ${action} - "${content}"`);
+                }
+            }
+
+            log(message) {
+                const logArea = document.getElementById("logArea");
+                const timestamp = new Date().toLocaleTimeString();
+                const entry = document.createElement("div");
+                entry.className = "log-entry";
+                entry.innerHTML = `
+                    <span class="timestamp">[${timestamp}]</span>
+                    <span>${message}</span>
+                `;
+
+                logArea.appendChild(entry);
+                logArea.scrollTop = logArea.scrollHeight;
+
+                while (logArea.children.length > 50) {
+                    logArea.removeChild(logArea.firstChild);
+                }
+            }
+        }
+
+        // Initialize controller when page loads
+        let controller;
+        document.addEventListener("DOMContentLoaded", () => {
+            controller = new RobotController();
+        });
+    </script>
+</body>
+
+</html>

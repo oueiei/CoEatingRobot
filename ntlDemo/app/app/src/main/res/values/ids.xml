@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="spRobotType" type="id"/>
+    <item name="etTestText" type="id"/>
+    <item name="btnTestSpeak" type="id"/>
+    <item name="tvCurrentCommand" type="id"/>
+</resources>

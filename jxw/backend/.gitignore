@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# 環境變數
+.env
+
+# 日誌
+*.log
+
+# 數據文件 - 只保留目錄結構，不提交數據
+data/*
+!data/conversations/.gitkeep
+
+# Docker
+.docker/
