@@ -32,10 +32,13 @@ import java.util.concurrent.Executors;
  */
 public class WebSocketHandler implements SocketHandlerInterface {
     private static final String TAG = "WebSocketHandler";
-    private static final String WS_URL = "ws://140.112.14.225:8765";
-    //192.168.50.56
-    private static final String SERVER_HOST = "140.112.14.225";
-    private static final int LOGIN_PORT = 12345;
+    private static final String DEFAULT_SERVER_HOST = "140.112.14.225";
+    private static final int DEFAULT_WS_PORT = 8765;
+    private static final int DEFAULT_LOGIN_PORT = 12345;
+    private String serverHost = DEFAULT_SERVER_HOST;
+    private int wsPort = DEFAULT_WS_PORT;
+    private int loginPort = DEFAULT_LOGIN_PORT;
+    private String wsUrl = "ws://" + DEFAULT_SERVER_HOST + ":" + DEFAULT_WS_PORT;
     private static final int RECONNECT_DELAY_MS = 5000;
     private static final int CONNECTION_TIMEOUT_MS = 5000;
     private static final int MAX_RECONNECT_ATTEMPTS = 5;
@@ -74,6 +77,16 @@ public class WebSocketHandler implements SocketHandlerInterface {
      */
     public WebSocketHandler() {
         // Initialize but don't connect yet
+    }
+
+    /**
+     * Set server connection config
+     */
+    public void setServerConfig(String host, int wsPort, int loginPort) {
+        this.serverHost = host;
+        this.wsPort = wsPort;
+        this.loginPort = loginPort;
+        this.wsUrl = "ws://" + host + ":" + wsPort;
     }
     public boolean isStreaming(){
         return isStreaming;
@@ -371,7 +384,7 @@ public class WebSocketHandler implements SocketHandlerInterface {
 
             // 建立連接並發送數據
             Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(SERVER_HOST, LOGIN_PORT), CONNECTION_TIMEOUT_MS);
+            socket.connect(new InetSocketAddress(serverHost, loginPort), CONNECTION_TIMEOUT_MS);
             socket.getOutputStream().write(jsonString.getBytes(StandardCharsets.UTF_8));
             socket.getOutputStream().flush();
             Log.d(TAG, "登入請求已發送");
@@ -414,7 +427,7 @@ public class WebSocketHandler implements SocketHandlerInterface {
         }
 
         try {
-            URI uri = new URI(WS_URL);
+            URI uri = new URI(wsUrl);
             webSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake handshake) {

@@ -354,6 +354,15 @@
         <div class="main-content">
             <div class="sidebar">
                 <div class="control-panel">
+                    <h3>Server URL</h3>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="text" id="serverUrl" value="wss://sociallab.duckdns.org/ntl_demo/"
+                            style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px;">
+                        <button class="btn btn-primary" id="reconnectBtn" style="padding: 8px 12px; font-size: 13px;">Connect</button>
+                    </div>
+                </div>
+
+                <div class="control-panel">
                     <h3>Connection Status</h3>
                     <div class="connection-status">
                         <div class="status-dot" id="connectionDot"></div>
@@ -431,10 +440,18 @@
                 this.connectWebSocket();
                 this.setupEventListeners();
                 this.updateConnectionStatus();
+
+                document.getElementById("reconnectBtn").addEventListener("click", () => {
+                    if (this.ws) {
+                        this.ws.close(1000, "Manual reconnect");
+                    }
+                    this.connectWebSocket();
+                    this.log("Reconnecting to: " + document.getElementById("serverUrl").value);
+                });
             }
 
             connectWebSocket() {
-                const wsUrl = "wss://sociallab.duckdns.org/ntl_demo/";
+                const wsUrl = document.getElementById("serverUrl").value.trim() || "wss://sociallab.duckdns.org/ntl_demo/";
                 this.ws = new WebSocket(wsUrl);
 
                 this.ws.onopen = () => {

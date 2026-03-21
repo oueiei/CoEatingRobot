@@ -1,6 +1,7 @@
 package com.example.ntldemo
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +22,12 @@ class MainActivity : AppCompatActivity() {
 
     var webSocket: WebSocket? = null
     private val client = OkHttpClient()
-    private val WEBSOCKET_URL = "wss://sociallab.duckdns.org/ntl_demo/"
+    lateinit var websocketUrl: String
+
+    companion object {
+        const val PREF_NAME = "woz_controller_prefs"
+        const val DEFAULT_URL = "wss://sociallab.duckdns.org/ntl_demo/"
+    }
 
     // 公開屬性供 Fragment 使用
     var myId: String = ""
@@ -80,6 +86,10 @@ class MainActivity : AppCompatActivity() {
             "excited" to "android.resource://${packageName}/${R.raw.e_excited_s}"
 
         )
+
+        // 從 SharedPreferences 載入 Server URL
+        val prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        websocketUrl = prefs.getString("server_url", DEFAULT_URL) ?: DEFAULT_URL
 
         initNuwaRobotAPI()
         initWebSocket()
@@ -191,10 +201,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initWebSocket() {
+    fun initWebSocket() {
         webSocket?.close(1000, "Reconnecting")
 
-        val request = Request.Builder().url(WEBSOCKET_URL).build()
+        val request = Request.Builder().url(websocketUrl).build()
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 isWebSocketConnected = true

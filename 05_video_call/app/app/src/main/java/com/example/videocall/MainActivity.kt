@@ -29,9 +29,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvOnlineUsers: RecyclerView
     private lateinit var usersAdapter: OnlineUsersAdapter
 
+    private lateinit var etServerUrl: EditText
+
     private var webSocket: WebSocket? = null
     private val client = OkHttpClient()
-    private val WEBSOCKET_URL = "wss://sociallab.duckdns.org/videoCall/"
+    private lateinit var websocketUrl: String
+
+    companion object {
+        private const val PREF_NAME = "video_call_prefs"
+        private const val DEFAULT_URL = "wss://sociallab.duckdns.org/videoCall/"
+    }
 
     private var myId: String = ""
     private var isRegistered = false
@@ -58,6 +65,10 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO), 1)
         }
 
+        // 從 SharedPreferences 載入 Server URL
+        val prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        websocketUrl = prefs.getString("server_url", DEFAULT_URL) ?: DEFAULT_URL
+
         initViews()
         initWebSocket()
         setupClickListeners()
@@ -75,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // 當回到 MainActivity 時，檢查是否需要重新連接
-        if (isRegistered && webSocket?.request()?.url?.toString() != WEBSOCKET_URL) {
+        if (isRegistered && webSocket?.request()?.url?.toString() != websocketUrl) {
             Log.d("MainActivity", "onResume: 重新建立 WebSocket 連接")
             initWebSocket()
         }
@@ -90,6 +101,8 @@ class MainActivity : AppCompatActivity() {
         btnDecline = findViewById(R.id.btnDecline)
         tvStatus = findViewById(R.id.tvStatus)
         rvOnlineUsers = findViewById(R.id.rvOnlineUsers)
+        etServerUrl = findViewById(R.id.etServerUrl)
+        etServerUrl.setText(websocketUrl)
 
         // 預設生成一個隨機ID
         etMyId.setText("User${(1000..9999).random()}")
@@ -129,10 +142,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initWebSocket() {
+        // 更新並儲存 URL
+        websocketUrl = etServerUrl.text.toString().trim().ifEmpty { DEFAULT_URL }
+        getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
+            .putString("server_url", websocketUrl).apply()
+
         // 先關閉現有連接
         webSocket?.close(1000, "Reconnecting")
 
-        val request = Request.Builder().url(WEBSOCKET_URL).build()
+        val request = Request.Builder().url(websocketUrl).build()
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 runOnUiThread {
@@ -303,7 +321,7 @@ class MainActivity : AppCompatActivity() {
             putExtra("PEER_ID", peerId)
             putExtra("MY_ID", myId)
             putExtra("IS_CALLER", isCaller)
-            putExtra("WEBSOCKET_URL", WEBSOCKET_URL)
+            putExtra("WEBSOCKET_URL", websocketUrl)
         }
         startActivity(intent)
 

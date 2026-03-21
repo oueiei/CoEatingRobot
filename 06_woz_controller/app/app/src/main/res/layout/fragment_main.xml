@@ -15,6 +15,16 @@
         android:layout_gravity="center"
         android:layout_marginBottom="24dp"/>
 
+    <!-- Server URL 設定 -->
+    <EditText
+        android:id="@+id/etServerUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Server URL (e.g. wss://sociallab.duckdns.org/ntl_demo/)"
+        android:inputType="textUri"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp"/>
+
     <!-- 連接狀態 -->
     <LinearLayout
         android:layout_width="match_parent"

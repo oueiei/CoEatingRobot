@@ -31,11 +31,17 @@ class CameraActivity : AppCompatActivity() {
     // WebSocket
     private lateinit var webSocket: WebSocket
     private val client = OkHttpClient()
-    private val WEBSOCKET_URL = "ws://140.112.92.133:6868"
+    private lateinit var websocketUrl: String
+    private lateinit var serverIp: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
+
+        // 從 Intent 取得 IP 和 Port
+        serverIp = intent.getStringExtra(MainActivity.EXTRA_SERVER_IP) ?: "140.112.92.133"
+        val serverPort = intent.getStringExtra(MainActivity.EXTRA_SERVER_PORT) ?: "6868"
+        websocketUrl = "ws://$serverIp:$serverPort"
 
         // 初始化 UI
         btnToggleCamera = findViewById(R.id.btnToggleCamera)
@@ -163,8 +169,8 @@ class CameraActivity : AppCompatActivity() {
 
 
     private fun initWebSocket() {
-        Log.d("WebSocket", "正在連接: $WEBSOCKET_URL")
-        val request = Request.Builder().url(WEBSOCKET_URL).build()
+        Log.d("WebSocket", "正在連接: $websocketUrl")
+        val request = Request.Builder().url(websocketUrl).build()
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d("WebSocket", "WebSocket 已連接")
@@ -230,9 +236,9 @@ class CameraActivity : AppCompatActivity() {
         Log.d("WebSocket", "開始串流，WebSocket 狀態檢查...")
 
         val iceServers = listOf(
-            PeerConnection.IceServer.builder("stun:140.112.92.133:3478")
+            PeerConnection.IceServer.builder("stun:$serverIp:3478")
                 .createIceServer(),
-            PeerConnection.IceServer.builder("turn:140.112.92.133:3478")
+            PeerConnection.IceServer.builder("turn:$serverIp:3478")
                 .setUsername("hcc")
                 .setPassword("j0207")
                 .createIceServer()

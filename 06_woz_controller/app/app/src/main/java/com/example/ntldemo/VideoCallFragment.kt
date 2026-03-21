@@ -46,7 +46,8 @@ class VideoCallFragment : Fragment() {
     private var peerId: String = ""
     private var myId: String = ""
     private var isCaller: Boolean = false
-    private val websocketUrl = "wss://sociallab.duckdns.org/ntl_demo/"
+    private val websocketUrl: String
+        get() = (activity as? MainActivity)?.websocketUrl ?: MainActivity.DEFAULT_URL
 
     companion object {
         private const val TAG = "VideoCallFragment"

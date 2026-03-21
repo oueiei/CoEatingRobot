@@ -291,7 +291,11 @@ public class MainActivity extends AppCompatActivity implements RobotEventCallbac
         mRobotAPI = new NuwaRobotAPI(this, mClientId);
 
         // 初始化其他組件
-        HttpHandler httpHandler = new HttpHandler(executorService);
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String serverIp = prefs.getString("server_ip", "172.20.10.2");
+        String serverPort = prefs.getString("server_port", "8000");
+        String baseUrl = "http://" + serverIp + ":" + serverPort + "/";
+        HttpHandler httpHandler = new HttpHandler(executorService, baseUrl);
         cameraHandler = new CameraHandler(this);
         DataRepository dataRepository = new DataRepository(httpHandler, executorService);
         httpHandler.setDataRepository(dataRepository);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class SettingFragment extends Fragment {
     private String selectedChatType = "biography";     // 默認聊天模式
     private Button selectedPersonalityButton;     // 已選擇的人格按鈕
     private Button selectedChatTypeButton;        // 已選擇的聊天模式按鈕
+    private EditText etServerIp;
     private SharedPreferences sharedPreferences;
     private View view;
 
@@ -52,6 +54,10 @@ public class SettingFragment extends Fragment {
         usernameText.setText(username);
         passwordText.setText(password.replaceAll("\\.", "*"));  // 使用星號隱藏密碼
         createdDateText.setText(createdDate);
+
+        // Server IP 輸入
+        etServerIp = view.findViewById(R.id.et_server_ip);
+        etServerIp.setText(sharedPreferences.getString("server_ip", "140.112.14.225"));
 
         // 人格選擇按鈕
         Button enfpButton = view.findViewById(R.id.enfp_button);
@@ -104,6 +110,7 @@ public class SettingFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("selected_personality", selectedPersonality);
         editor.putString("selected_chat_type", selectedChatType);
+        editor.putString("server_ip", etServerIp.getText().toString().trim());
         editor.apply();  // 保存變更
     }
 

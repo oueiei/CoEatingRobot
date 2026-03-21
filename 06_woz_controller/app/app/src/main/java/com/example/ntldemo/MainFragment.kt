@@ -1,5 +1,6 @@
 package com.example.ntldemo
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 class MainFragment : Fragment() {
 
     private lateinit var etMyId: EditText
+    private lateinit var etServerUrl: EditText
     private lateinit var btnRegister: Button
     private lateinit var tvStatus: TextView
     private lateinit var tvConnectionStatus: TextView
@@ -38,11 +40,31 @@ class MainFragment : Fragment() {
 
     private fun initViews(view: View) {
         etMyId = view.findViewById(R.id.etMyId)
+        etServerUrl = view.findViewById(R.id.etServerUrl)
         btnRegister = view.findViewById(R.id.btnRegister)
         tvStatus = view.findViewById(R.id.tvStatus)
         tvConnectionStatus = view.findViewById(R.id.tvConnectionStatus)
         tvAssignedRole = view.findViewById(R.id.tvAssignedRole)
         tvCurrentCommand = view.findViewById(R.id.tvCurrentCommand)
+
+        // 載入已儲存的 Server URL
+        val prefs = requireContext().getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE)
+        etServerUrl.setText(prefs.getString("server_url", MainActivity.DEFAULT_URL))
+
+        // 當 URL 失去焦點時自動儲存並重新連線
+        etServerUrl.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val newUrl = etServerUrl.text.toString().trim()
+                if (newUrl.isNotEmpty()) {
+                    prefs.edit().putString("server_url", newUrl).apply()
+                    val mainActivity = activity as? MainActivity
+                    mainActivity?.let {
+                        it.websocketUrl = newUrl
+                        it.initWebSocket()
+                    }
+                }
+            }
+        }
     }
 
     private fun updateUIFromActivity(activity: MainActivity) {

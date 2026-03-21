@@ -25,7 +25,8 @@ import java.util.concurrent.ExecutorService;
 
 public class HttpHandler implements HttpHandlerInterface {
 
-    private static final String BASE_URL = "http://172.20.10.2:8000/";
+    private static final String DEFAULT_BASE_URL = "http://172.20.10.2:8000/";
+    private String baseUrl;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final ExecutorService executorService;
     private DataRepository dataRepository;
@@ -33,6 +34,16 @@ public class HttpHandler implements HttpHandlerInterface {
 
     public HttpHandler(ExecutorService executorService) {
         this.executorService = executorService;
+        this.baseUrl = DEFAULT_BASE_URL;
+    }
+
+    public HttpHandler(ExecutorService executorService, String baseUrl) {
+        this.executorService = executorService;
+        this.baseUrl = baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     public void setDataRepository(DataRepository dataRepository) {
@@ -64,7 +75,7 @@ public class HttpHandler implements HttpHandlerInterface {
                 data.put("message", message);
             }
 
-            sendHttpRequest(BASE_URL + channel, data);
+            sendHttpRequest(baseUrl + channel, data);
         } catch (JSONException e) {
             Log.e(TAG, "Error creating JSON", e);
         }

@@ -326,6 +326,11 @@ public class MainActivity extends AppCompatActivity implements RobotEventCallbac
 
         // 初始化 WebSocket
         webSocketHandler = new WebSocketHandler();
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String serverIp = prefs.getString("server_ip", "140.112.14.225");
+        int wsPort = prefs.getInt("ws_port", 8765);
+        int loginPort = prefs.getInt("login_port", 12345);
+        webSocketHandler.setServerConfig(serverIp, wsPort, loginPort);
 
         // 初始化 DataRepository 並傳入 WebSocket
         DataRepository dataRepository = new DataRepository(webSocketHandler, executorService);
