@@ -11,6 +11,8 @@ NTU Social Lab 內部培訓工作坊教材。
 
 ### 取得教材
 
+前往 [github.com](https://github.com) 註冊帳號，記住您的使用者名稱和密碼。
+
 **方法一：下載 ZIP（不需要 Git）**
 
 1. 前往 [GitHub 頁面](https://github.com/hungchunchang/SocialRoboticsProgram)
@@ -30,7 +32,7 @@ git clone https://github.com/hungchunchang/SocialRoboticsProgram.git
 
 詳細步驟請參考 [`00_simple_chatbot/README.md`](00_simple_chatbot/README.md)，包含：
 
-- 安裝 **VSCode** 編輯器
+- 安裝 **[VSCode](https://code.visualstudio.com)** 編輯器
 - 安裝 **Python** + **Conda** 環境管理
 - 設定 **GitHub PAT**（個人存取權杖）
 - 認識 Git、依賴管理等基本概念

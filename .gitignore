@@ -6,6 +6,8 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+.env
 *.png
 *.pdf
 .claude
+*.docx

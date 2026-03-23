@@ -224,11 +224,12 @@ REST API 是一種設計風格，讓 Client 和 Server 用 **URL + HTTP 方法**
 
 ## 實作步驟一：環境準備
 
-### 1. 建立 Conda 環境
+### 1. 啟動 Conda 環境
+
+在終端機中：
 
 ```bash
-conda create -n fastapi_chat python=3.12
-conda activate fastapi_chat
+conda activate socialrobot
 ```
 
 ### 2. 安裝依賴套件
@@ -244,7 +245,7 @@ pip install -r requirements.txt
 
 ### 建立 `.env` 檔案
 
-在 `01_fastapi_chat/` 資料夾中建立 `.env` 檔案：
+回到 VSCode，在 `01_fastapi_chat/` 資料夾中建立 `.env` 檔案：
 
 ```
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
@@ -354,14 +355,14 @@ def chat(message: str) -> dict:
 ### 終端機 1 —— 啟動伺服器
 
 ```bash
-conda activate fastapi_chat
+conda activate socialrobot
 uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 
 ### 終端機 2 —— 啟動客戶端
 
 ```bash
-conda activate fastapi_chat
+conda activate socialrobot
 python client.py
 ```
 
