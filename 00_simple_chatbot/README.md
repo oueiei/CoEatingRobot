@@ -289,7 +289,7 @@ python --version
 ### [實作] 建立 Conda 環境
 
 ```bash
-conda create -n socialrobot python=3.12
+conda create -n socialrobot python=3.13
 conda activate socialrobot
 ```
 

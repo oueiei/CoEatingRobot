@@ -239,6 +239,8 @@ cd 01_fastapi_chat
 pip install -r requirements.txt
 ```
 
+會使用 `pip` 的依賴管理套件，逐個安裝 `requirements.txt` 文件中的每個資源庫
+
 ---
 
 ## 實作步驟二：設定 API Key
@@ -250,6 +252,8 @@ pip install -r requirements.txt
 ```
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
 ```
+
+其中，你要把`sk-xxxxxxxxxxxxxxxxxxxxxxxx`替換成你自己的 key
 
 <div class="highlight">
 
