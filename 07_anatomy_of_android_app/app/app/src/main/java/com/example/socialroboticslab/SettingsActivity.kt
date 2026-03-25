@@ -17,6 +17,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var etTurnUrl: EditText
     private lateinit var etTurnUser: EditText
     private lateinit var etTurnPass: EditText
+    private lateinit var etWozUrl: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,7 @@ class SettingsActivity : AppCompatActivity() {
         etTurnUrl = findViewById(R.id.etTurnUrl)
         etTurnUser = findViewById(R.id.etTurnUser)
         etTurnPass = findViewById(R.id.etTurnPass)
+        etWozUrl = findViewById(R.id.etWozUrl)
 
         loadSettings()
 
@@ -49,6 +51,7 @@ class SettingsActivity : AppCompatActivity() {
         etTurnUrl.setText(PrefsManager.getTurnUrl(this))
         etTurnUser.setText(PrefsManager.getTurnUser(this))
         etTurnPass.setText(PrefsManager.getTurnPass(this))
+        etWozUrl.setText(PrefsManager.getWozUrl(this))
     }
 
     private fun saveSettings() {
@@ -60,6 +63,7 @@ class SettingsActivity : AppCompatActivity() {
         PrefsManager.setTurnUrl(this, etTurnUrl.text.toString().trim())
         PrefsManager.setTurnUser(this, etTurnUser.text.toString().trim())
         PrefsManager.setTurnPass(this, etTurnPass.text.toString().trim())
+        PrefsManager.setWozUrl(this, etWozUrl.text.toString().trim())
         Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show()
     }
 
@@ -72,6 +76,7 @@ class SettingsActivity : AppCompatActivity() {
         etTurnUrl.setText(PrefsManager.DEFAULT_TURN_URL)
         etTurnUser.setText(PrefsManager.DEFAULT_TURN_USER)
         etTurnPass.setText(PrefsManager.DEFAULT_TURN_PASS)
+        etWozUrl.setText(PrefsManager.DEFAULT_WOZ_URL)
         saveSettings()
     }
 

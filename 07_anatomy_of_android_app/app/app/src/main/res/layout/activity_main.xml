@@ -66,8 +66,28 @@
             android:layout_height="64dp"
             android:text="Ch5 - Video Call"
             android:textSize="16sp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="12dp"
             android:backgroundTint="#9b59b6"/>
+
+        <!-- Ch6: WoZ Controller -->
+        <Button
+            android:id="@+id/btnWozController"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="Ch6 - WoZ Controller"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#1abc9c"/>
+
+        <!-- Conversation Design（對話設計） -->
+        <Button
+            android:id="@+id/btnConversationDesign"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="Conversation Design"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="#e74c3c"/>
 
         <!-- Settings -->
         <Button

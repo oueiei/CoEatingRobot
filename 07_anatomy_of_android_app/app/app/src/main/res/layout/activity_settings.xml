@@ -70,6 +70,21 @@
             android:inputType="textUri"
             android:layout_marginBottom="24dp"/>
 
+        <!-- WoZ Controller -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ch6 - WoZ Controller Server"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+        <EditText
+            android:id="@+id/etWozUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="wss://sociallab.duckdns.org/ntl_demo/"
+            android:inputType="textUri"
+            android:layout_marginBottom="24dp"/>
+
         <!-- STUN / TURN -->
         <TextView
             android:layout_width="wrap_content"

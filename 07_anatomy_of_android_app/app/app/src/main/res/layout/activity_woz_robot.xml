@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- ═══ View 1: 註冊 & 狀態面板 ═══ -->
+    <ScrollView
+        android:id="@+id/setupView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F5F5F5"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WoZ Robot Client"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 連線狀態 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connection: "
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvConnectionStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未連接"
+                    android:textSize="14sp"
+                    android:textColor="#e74c3c"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- Robot ID -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Robot ID"
+                android:textSize="12sp"
+                android:textColor="#7f8c8d"/>
+
+            <EditText
+                android:id="@+id/etRobotId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Robot_1234"
+                android:inputType="text"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Register Robot"
+                android:backgroundTint="#2ecc71"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- 狀態資訊 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status"
+                    android:textSize="12sp"
+                    android:textColor="#7f8c8d"/>
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="等待連線..."
+                    android:textSize="16sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#E3F2FD"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Assigned Role"
+                    android:textSize="12sp"
+                    android:textColor="#7f8c8d"/>
+
+                <TextView
+                    android:id="@+id/tvAssignedRole"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="未分配"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Command"
+                    android:textSize="12sp"
+                    android:textColor="#7f8c8d"/>
+
+                <TextView
+                    android:id="@+id/tvCurrentCommand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- 返回按鈕 -->
+            <Button
+                android:id="@+id/btnBack"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Back to Main"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ═══ View 2: 全螢幕表情影片（Control Mode） ═══ -->
+    <FrameLayout
+        android:id="@+id/controlModeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <!-- ═══ View 3: 視訊通話（Video Call） ═══ -->
+    <FrameLayout
+        android:id="@+id/videoCallView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <!-- 遠端視訊（大畫面） -->
+        <org.webrtc.SurfaceViewRenderer
+            android:id="@+id/remoteView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!-- 機器人頭像（大畫面，備用） -->
+        <ImageView
+            android:id="@+id/ivRobotFaceMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+        <!-- 本地視訊（小畫面，右上角） -->
+        <org.webrtc.SurfaceViewRenderer
+            android:id="@+id/localView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="16dp"/>
+
+        <!-- 機器人頭像（小畫面，備用） -->
+        <ImageView
+            android:id="@+id/ivRobotFaceLocal"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="16dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+        <!-- 通話狀態 -->
+        <TextView
+            android:id="@+id/tvCallStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="視訊中..."
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:background="#80000000"
+            android:padding="8dp"/>
+
+        <!-- 通話控制按鈕 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="#80000000">
+
+            <Button
+                android:id="@+id/btnToggleCamera"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:text="Cam"
+                android:textSize="11sp"
+                android:layout_marginEnd="16dp"/>
+
+            <Button
+                android:id="@+id/btnToggleMute"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:text="Mute"
+                android:textSize="11sp"
+                android:layout_marginEnd="16dp"/>
+
+            <Button
+                android:id="@+id/btnHangUp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:text="End"
+                android:textSize="11sp"
+                android:backgroundTint="#e74c3c"/>
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

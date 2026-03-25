@@ -42,11 +42,18 @@ android {
 }
 
 dependencies {
+    // NuwaSDK（機器人 API）
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar", "*.jar"))))
+
     // Android 核心庫
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material)
     implementation(libs.androidx.constraintlayout)
+
+    // Lifecycle（ViewModel + LiveData）
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
 
     // WebRTC（視訊串流 + 視訊通話）
     implementation("io.getstream:stream-webrtc-android:1.1.1")

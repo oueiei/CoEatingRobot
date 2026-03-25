@@ -35,14 +35,29 @@
         <!-- 統一設定頁 -->
         <activity android:name=".SettingsActivity" android:exported="false" />
 
-        <!-- Ch2: HTTP Chat -->
-        <activity android:name=".http.HttpChatActivity" android:exported="false" />
+        <!-- 對話設計（Pipecat Pipeline 設定） -->
+        <activity android:name=".design.ConversationDesignActivity" android:exported="false" />
 
-        <!-- Ch3: WebSocket Audio -->
-        <activity android:name=".websocket.AudioStreamActivity" android:exported="false" />
+        <!-- Ch2: HTTP Chat（全螢幕表情 + Robot TTS/STT） -->
+        <activity
+            android:name=".http.HttpChatActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SocialRoboticsLab.Fullscreen" />
+
+        <!-- Ch3: WebSocket Audio（全螢幕表情 + 音訊串流） -->
+        <activity
+            android:name=".websocket.AudioStreamActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SocialRoboticsLab.Fullscreen" />
 
         <!-- Ch4: WebRTC Video Streaming -->
         <activity android:name=".streaming.VideoStreamActivity" android:exported="false" />
+
+        <!-- Ch6: WoZ Controller（全螢幕表情 + 指令接收） -->
+        <activity
+            android:name=".woz.WozRobotActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SocialRoboticsLab.Fullscreen" />
 
         <!-- Ch5: WebRTC Video Call -->
         <activity android:name=".videocall.VideoCallLobbyActivity" android:exported="false" />
