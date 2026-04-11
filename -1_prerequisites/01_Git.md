@@ -4,7 +4,7 @@
 
 ## 簡介 Git 的工作方式
 
-![alt text](git.png)
+![alt text](../00_simple_chatbot/materials/git.png)
 
 - 一個由 .git 檔案進行版本控制的資料夾，會稱為一個倉庫（repository, or repo）
 - 這個倉庫可以只純在本機，或是上傳到 Github 並且兩者同步更新，可以將 Github 理解成雲端硬碟的角色
@@ -28,11 +28,44 @@
 
 ### 從 Github 下載已經寫好的程式
 
-打開終端機，進入你希望資料儲存的位置（上層資料夾名稱盡量不要有中文、空格），輸入：
+- 打開終端機，進入你希望資料儲存的位置（上層資料夾名稱盡量不要有中文、空格），輸入：
 
 ```sh
 git clone https://github.com/hungchunchang/SocialRoboticsProgram.git
 ```
+
+- 新增一個 branch
+
+```sh
+git checkout -b my-feature
+```
+
+- 在這邊進行更改，並不會影響到 main branch 上的檔案。在完成開發後：
+- 情境一：將檔案推送到原本的倉庫中：
+
+```sh
+git push origin my-feature
+```
+
+在 github 上建立 pull request，會由負責人進行審查，再決定是否要合併你提交的更新。
+
+- 情境二：合併其他人更新的新內容
+  - 首先切換回 main branch
+  - 將新的進度拉取下來
+
+```sh
+git checkout main
+git pull origin main
+```
+
+如果你這個 feature 分支的任務還沒結束，或者你想基於最新的 main 繼續寫，這時就要進行 Rebase：
+
+```Bash
+git checkout feature
+git rebase main
+```
+
+這會把你在 feature 分支上尚未合併（或新寫）的 Commit，重新接在剛才拉下來的最新 main 之後。
 
 ### 創建一個新的倉庫
 
