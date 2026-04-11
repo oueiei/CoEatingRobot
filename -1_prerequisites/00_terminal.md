@@ -77,7 +77,7 @@ C:\ >
 # for windows
 ```
 
-（終端機可能因爲使用不同的模擬器，所以畫面長得很不一樣，在 macOS/linux 上可以自己選擇不同的模擬器如 ghostty, iterm2等，有興趣的話可以參考(這個)[https://lijianfei.com/post/gao-bie-iterm2-de-yin-ying-ghostty-zhe-kuan-shen-ji-zhong-duan-mo-ni-qi-jiang-dian-fu-ni-de-ren-zhi/](或這個)(https://www.reddit.com/r/Ghostty/comments/1hw1jc2/my_ghostty_config/?tl=zh-hant)進行設定）
+（終端機可能因爲使用不同的模擬器，所以畫面長得很不一樣，在 macOS/linux 上可以自己選擇不同的模擬器如 ghostty, iterm2等，有興趣的話可以參考[這個](https://lijianfei.com/post/gao-bie-iterm2-de-yin-ying-ghostty-zhe-kuan-shen-ji-zhong-duan-mo-ni-qi-jiang-dian-fu-ni-de-ren-zhi/)[或這個](https://www.reddit.com/r/Ghostty/comments/1hw1jc2/my_ghostty_config/?tl=zh-hant)進行設定）
 
 ### ls/dir
 
