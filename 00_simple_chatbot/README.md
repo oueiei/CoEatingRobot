@@ -103,7 +103,7 @@
 - 選擇 URL, 貼上 `https://github.com/hungchunchang/SocialRoboticsProgram.git`
 - `Local Path` 欄位可以選擇自己想要存放檔案的位置（上層資料夾名稱盡量不要有中文、空格）
 - 選擇右下角 `clone` 按鈕
-- 複製完成之後，點選 `Open in Visual Studio Cod`
+- 複製完成之後，點選 `Open in Visual Studio Code`
 
 ### 使用終端機
 
