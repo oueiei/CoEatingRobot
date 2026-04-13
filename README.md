@@ -38,6 +38,7 @@ NTU Social Lab 內部培訓工作坊教材。
 - 認識 **MVVM** 架構模式
 - 後端改用 Flask，設計分階段對話流程
 
+
 ### 04 - [Audio WebSocket](04_audio_websocket/README.md)
 
 > 即時語音串流 —— 從 HTTP 升級為 WebSocket
