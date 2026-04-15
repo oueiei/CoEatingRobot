@@ -63,7 +63,16 @@ conda 是環境管理工具的一種，常見的管理工具還包含了 uv, pye
 2. 選擇 Miniconda Installers，下載 Windows 版
 3. 執行安裝檔，**勾選 "Add to PATH"**
 4. 重新啟動終端機
-5. 再次開啟時，使用 Miniforge Prompt
+5. 再次開啟時，使用 Miniforge Prompt，並且輸入
+
+```bash
+conda init powersehll
+```
+此時打開powershell時應該也可以正常運行conda
+6. a，如果不行(驗證安裝失敗)，在 Powershell中輸入
+```bash
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
 
 #### 在 macOS 上安裝
 
