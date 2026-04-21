@@ -34,6 +34,7 @@
 
         <!-- 統一設定頁 -->
         <activity android:name=".SettingsActivity" android:exported="false" />
+        <activity android:name=".UnitEntryActivity" android:exported="false" />
 
         <!-- 對話設計（Pipecat Pipeline 設定） -->
         <activity android:name=".design.ConversationDesignActivity" android:exported="false" />
