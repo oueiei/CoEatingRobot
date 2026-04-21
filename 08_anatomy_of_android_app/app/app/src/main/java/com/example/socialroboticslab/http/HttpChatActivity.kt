@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.socialroboticslab.R
+import com.example.socialroboticslab.UnitEntryActivity
 import com.example.socialroboticslab.util.ExpressionVideoHelper
 import com.example.socialroboticslab.util.PrefsManager
 import com.nuwarobotics.service.IClientId
@@ -56,6 +57,8 @@ class HttpChatActivity : AppCompatActivity() {
     private val personalityType = "e"
     private val userName = "android_user"
     private var isEnding = false
+    private var shouldAutoHello = false
+    private var initialMessage = "hello"
 
     // 動作對應表
     private val motionMap = mapOf(
@@ -73,6 +76,10 @@ class HttpChatActivity : AppCompatActivity() {
         videoView = findViewById(R.id.videoView)
         tvSubtitle = findViewById(R.id.tvSubtitle)
         expressionHelper = ExpressionVideoHelper(this)
+        shouldAutoHello = intent.getBooleanExtra(UnitEntryActivity.EXTRA_AUTO_HELLO, false)
+        initialMessage = intent.getStringExtra(UnitEntryActivity.EXTRA_INITIAL_MESSAGE)
+            ?.ifBlank { "hello" }
+            ?: "hello"
 
         initRobot()
         playExpression("idling")
@@ -104,8 +111,14 @@ class HttpChatActivity : AppCompatActivity() {
             grammar.updateBody()
             mRobotAPI.createGrammar(grammar.grammar, grammar.body)
 
-            // 開始聆聽
-            mainHandler.post { setStatus("listening") }
+            mainHandler.post {
+                if (shouldAutoHello) {
+                    tvSubtitle.text = "啟動對話中..."
+                    setStatus("thinking", initialMessage)
+                } else {
+                    setStatus("listening")
+                }
+            }
         }
 
         override fun onLongPress(value: Int) {

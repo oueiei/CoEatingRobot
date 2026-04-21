@@ -1,3 +1,6 @@
+"""
+uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+"""
 import os
 import json
 from dotenv import load_dotenv
