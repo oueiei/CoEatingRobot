@@ -167,7 +167,6 @@ def jxw_bot(user_name, question):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": "參與者回應道：" + question},
             ],
-            max_tokens=500,
         )
         
         raw = completion.choices[0].message.content
@@ -264,4 +263,5 @@ def create_user():
     return jsonify({"user_name": new_user_name})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    # Flask 內建伺服器
+    app.run(host='0.0.0.0', port=8080, debug=True)
