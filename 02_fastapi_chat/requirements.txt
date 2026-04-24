@@ -4,3 +4,7 @@ openai
 python-dotenv
 requests
 google.generativeai
+tensorflow
+pillow
+numpy
+opencv-python

@@ -58,7 +58,7 @@ def main():
 
         try:
             result = chat(user_input)
-            print(f"機器人：{result.get('reply', '（無回覆）')}")
+            print(f"機器人：{result.get('question', '（無回覆）')}")
 
             if result.get("is_ended", False):
                 print("\n（對話已結束）")
