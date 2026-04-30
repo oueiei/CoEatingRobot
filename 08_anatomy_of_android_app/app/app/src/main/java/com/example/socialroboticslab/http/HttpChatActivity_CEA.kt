@@ -266,16 +266,21 @@ class HttpChatActivity_CEA : AppCompatActivity() {
             "speaking" -> {
                 val expressionEmotion = if (!emotion.isNullOrBlank()) emotion else "neutral"
                 playExpression(expressionEmotion, loop = true)
+
                 if (!resultText.isNullOrBlank()) {
-                    tvSubtitle.text = resultText
+                    tvSubtitle.text = ""
                     mRobotAPI.startTTS(resultText)
                 }
             }
             "speaking_and_eating" -> {
                 val expressionEmotion = if (!emotion.isNullOrBlank()) emotion else "neutral"
                 playExpression(expressionEmotion, loop = true)
+
+                tvSubtitle.text = ""
+                mRobotAPI.startTTS("好吃、好吃。")
+
                 if (!resultText.isNullOrBlank()) {
-                    tvSubtitle.text = resultText
+                    tvSubtitle.text = ""
                     mRobotAPI.startTTS(resultText)
                 }
             }
@@ -293,10 +298,14 @@ class HttpChatActivity_CEA : AppCompatActivity() {
     }
 
     private fun playMotion(status: String) {
+        if (status !in motionMap) {
+            Log.e(TAG, "警告: 嘗試播放未定義的動作狀態: $status")
+            return
+        }
         val motion = motionMap[status] ?: return
         if (motion.isNotEmpty()) {
             if (status != "thinking" || Math.random() > 0.5) {
-                mRobotAPI.motionStop(true)
+
                 mRobotAPI.motionPlay(motion, true)
             }
         }
@@ -334,11 +343,12 @@ class HttpChatActivity_CEA : AppCompatActivity() {
                         val question = result.optString("question", responseBody)
                         val emotion = result.optString("emotion", "neutral")
                         val isEnded = result.optBoolean("is_ended", false)
+                        val bodyMotion = result.optString("body_motion", "speaking")
 
                         if (isEnded) {
                             setStatus("ending", question, emotion)
                         } else {
-                            setStatus("speaking_and_eating", question, emotion)
+                            setStatus(bodyMotion, question, emotion)
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Parse error: ${e.message}")

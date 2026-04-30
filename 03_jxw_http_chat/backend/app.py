@@ -184,6 +184,7 @@ def eat_bot(user_name, question):
     """與AI互動，生成回覆"""
     # 獲取用戶資料
     user_data = get_user_data(user_name)
+    body_motion = "speaking"
             
     # 生成對話歷史文本
     history = ""
@@ -211,14 +212,13 @@ def eat_bot(user_name, question):
             intro=intro_text,
             context=history, 
             turns=user_data.get("turns", 0)
-        )
+            )
+            body_motion = "speaking_and_eating"
 
     else:
         status_info = "\n[背景資訊：目前尚未偵測到使用者用餐的紀錄。]"
 
     print(status_info)
-    
-
     
     
     # 生成AI回覆
@@ -237,6 +237,8 @@ def eat_bot(user_name, question):
             # 移除可能的Markdown格式
             json_text = raw.replace('```json', '').replace('```', '').strip()
             data = json.loads(json_text)
+
+            data["body_motion"] = body_motion
             
             # 更新用戶資料
             if data.get("is_ended", False):
@@ -245,19 +247,21 @@ def eat_bot(user_name, question):
         
             with open(f"data/conversations/{user_name}.json", 'w', encoding='utf-8') as f:
                 json.dump(user_data, f, ensure_ascii=False, indent=2)
-                
+              
             return data
         except json.JSONDecodeError:
             # 如果無法解析JSON，返回原始文本作為問題
             return {
                 "question": raw,
-                "is_ended": False
+                "is_ended": False,
+                "body_motion": body_motion
             }
     except Exception as e:
         print(f"錯誤: {e}")
         return {
             "question": "抱歉，我遇到了一些問題，請稍後再試。",
-            "is_ended": False
+            "is_ended": False,
+            "body_motion": body_motion
         }
 
 
