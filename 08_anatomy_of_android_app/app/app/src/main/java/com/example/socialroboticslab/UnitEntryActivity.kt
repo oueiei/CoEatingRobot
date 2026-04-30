@@ -132,8 +132,8 @@ class UnitEntryActivity : AppCompatActivity() {
             UNIT_HTTP_CHAT_CEA -> UnitConfig(
                 title = "Co-Eating Agent",
                 description = "先確認本次要連的 HTTP server，再決定是否先送 hello 讓後端主動開場。",
-                loadUrl = { PrefsManager.getHttpUrl(it) },
-                saveUrl = { ctx, value -> PrefsManager.setHttpUrl(ctx, value) },
+                loadUrl = { PrefsManager.getHttpUrl_CEA(it) },
+                saveUrl = { ctx, value -> PrefsManager.setHttpUrl_CEA(ctx, value) },
                 targetActivity = HttpChatActivity_CEA::class.java,
                 supportsAutoHello = true,
             )

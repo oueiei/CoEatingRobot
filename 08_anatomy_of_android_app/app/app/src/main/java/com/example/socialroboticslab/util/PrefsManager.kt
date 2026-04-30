@@ -22,7 +22,7 @@ object PrefsManager {
     private const val KEY_TURN_PASS = "turn_pass"
     private const val KEY_WOZ_URL = "woz_url"
 
-    private const val KEY_HTTP_URL_CEA = "http_url"
+    private const val KEY_HTTP_URL_CEA = "http_url_cea"
 
     // ── Pipeline 設定 Keys（Pipecat 對話設計） ──
     private const val KEY_LLM_PROVIDER = "llm_provider"

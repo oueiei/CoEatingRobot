@@ -109,7 +109,7 @@ class SettingsActivity : AppCompatActivity() {
         etTurnUser        = findViewById(R.id.etTurnUser)
         etTurnPass        = findViewById(R.id.etTurnPass)
         etWozUrl          = findViewById(R.id.etWozUrl)
-        etHttpUrl_CEA         = findViewById(R.id.etHttpUrl_CEA)
+        etHttpUrl_CEA     = findViewById(R.id.etHttpUrl_CEA)
 
         statusHttpUrl         = findViewById(R.id.statusHttpUrl)
         statusWsAudioUrl      = findViewById(R.id.statusWsAudioUrl)
@@ -120,7 +120,7 @@ class SettingsActivity : AppCompatActivity() {
         statusTurnUrl         = findViewById(R.id.statusTurnUrl)
         statusTurnUser        = findViewById(R.id.statusTurnUser)
         statusTurnPass        = findViewById(R.id.statusTurnPass)
-        statusHttpUrl_CEA         = findViewById(R.id.statusHttpUrl_CEA)
+        statusHttpUrl_CEA     = findViewById(R.id.statusHttpUrl_CEA)
     }
 
     private fun cacheNavViews() {
@@ -206,6 +206,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun saveAll() {
         PrefsManager.setHttpUrl(this,         etHttpUrl.text.toString().trim())
+        PrefsManager.setHttpUrl_CEA(this,     etHttpUrl_CEA.text.toString().trim())
         PrefsManager.setWsAudioUrl(this,      etWsAudioUrl.text.toString().trim())
         PrefsManager.setWebrtcStreamUrl(this, etWebrtcStreamUrl.text.toString().trim())
         PrefsManager.setVideoCallUrl(this,    etVideoCallUrl.text.toString().trim())

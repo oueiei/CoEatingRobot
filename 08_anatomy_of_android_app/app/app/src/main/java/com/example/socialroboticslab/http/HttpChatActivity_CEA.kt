@@ -67,6 +67,12 @@ class HttpChatActivity_CEA : AppCompatActivity() {
         "listening" to "666_SA_Think",
         "speaking" to "666_RE_Ask",
         "bye" to "666_RE_Bye",
+        // ── 新增共食動作 ──
+        "nodding" to "666_BA_Nodhead",
+        "shaking" to "666_BA_Shakehead",
+        "drinking" to "666_DA_Drink",
+        "speaking_and_eating" to "666_DA_Eat",
+        "full" to "666_DA_Full"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -265,6 +271,14 @@ class HttpChatActivity_CEA : AppCompatActivity() {
                     mRobotAPI.startTTS(resultText)
                 }
             }
+            "speaking_and_eating" -> {
+                val expressionEmotion = if (!emotion.isNullOrBlank()) emotion else "neutral"
+                playExpression(expressionEmotion, loop = true)
+                if (!resultText.isNullOrBlank()) {
+                    tvSubtitle.text = resultText
+                    mRobotAPI.startTTS(resultText)
+                }
+            }
             "ending" -> {
                 isEnding = true
                 setStatus("speaking", resultText, emotion)
@@ -282,6 +296,7 @@ class HttpChatActivity_CEA : AppCompatActivity() {
         val motion = motionMap[status] ?: return
         if (motion.isNotEmpty()) {
             if (status != "thinking" || Math.random() > 0.5) {
+                mRobotAPI.motionStop(true)
                 mRobotAPI.motionPlay(motion, true)
             }
         }
@@ -323,7 +338,7 @@ class HttpChatActivity_CEA : AppCompatActivity() {
                         if (isEnded) {
                             setStatus("ending", question, emotion)
                         } else {
-                            setStatus("speaking", question, emotion)
+                            setStatus("speaking_and_eating", question, emotion)
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Parse error: ${e.message}")

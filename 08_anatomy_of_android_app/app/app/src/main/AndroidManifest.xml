@@ -64,5 +64,11 @@
         <activity android:name=".videocall.VideoCallLobbyActivity" android:exported="false" />
         <activity android:name=".videocall.VideoCallActivity" android:exported="false" />
 
+        <!-- Co-Eating Agent -->
+        <activity
+            android:name=".http.HttpChatActivity_CEA"
+            android:exported="false"
+            android:theme="@style/Theme.SocialRoboticsLab.Fullscreen" />
+
     </application>
 </manifest>

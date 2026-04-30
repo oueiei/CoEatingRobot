@@ -8,7 +8,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.socialroboticslab"
+        applicationId = "com.example.coeatingagent"
         minSdk = 28
         targetSdk = 36
         versionCode = 1

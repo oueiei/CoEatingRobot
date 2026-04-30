@@ -1,6 +1,6 @@
 import cv2
 import time
-from backend.eat_classifier import EatingModel
+from eat_classifier import EatingModel
 
 class SmartCamera:
     def __init__(self, camera_id=0):

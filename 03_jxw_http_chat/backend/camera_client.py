@@ -2,7 +2,7 @@
 import cv2
 import requests
 import time
-from backend.eat_classifier import EatingModel
+from eat_classifier import EatingModel
 
 def run_camera():
     model = EatingModel()
