@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(UnitEntryActivity.createIntent(this, UnitEntryActivity.UNIT_WOZ))
         }
 
+        findViewById<Button>(R.id.btnCoEatingAgent).setOnClickListener {
+            startActivity(UnitEntryActivity.createIntent(this, UnitEntryActivity.UNIT_HTTP_CHAT_CEA))
+        }
+
         findViewById<Button>(R.id.btnSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }

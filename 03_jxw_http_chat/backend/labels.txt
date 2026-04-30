@@ -1,0 +1,6 @@
+0 NotEat
+1 EatSnack
+2 EatMeal
+3 Background
+4 StandBy
+5 StandBy2

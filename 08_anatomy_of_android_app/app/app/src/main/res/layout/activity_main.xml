@@ -117,10 +117,21 @@
             android:layout_height="0dp"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
-            android:layout_columnSpan="2"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
             android:text="Ch6 — WoZ Controller"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:backgroundTint="#1abc9c"/>
+
+        <Button
+            android:id="@+id/btnCoEatingAgent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            android:text="Extra — Co-Eating Agent"
             android:textSize="18sp"
             android:textStyle="bold"
             android:backgroundTint="#1abc9c"/>

@@ -22,6 +22,8 @@ object PrefsManager {
     private const val KEY_TURN_PASS = "turn_pass"
     private const val KEY_WOZ_URL = "woz_url"
 
+    private const val KEY_HTTP_URL_CEA = "http_url"
+
     // ── Pipeline 設定 Keys（Pipecat 對話設計） ──
     private const val KEY_LLM_PROVIDER = "llm_provider"
     private const val KEY_LLM_MODEL = "llm_model"
@@ -165,4 +167,12 @@ object PrefsManager {
 
     fun setLanguage(ctx: Context, value: String) =
         prefs(ctx).edit().putString(KEY_LANGUAGE, value).apply()
+
+    // ── HTTP Chat (CoEating Agent) ──
+    fun getHttpUrl_CEA(ctx: Context): String =
+        prefs(ctx).getString(KEY_HTTP_URL_CEA, DEFAULT_HTTP_URL) ?: DEFAULT_HTTP_URL
+
+    fun setHttpUrl_CEA(ctx: Context, url: String) =
+        prefs(ctx).edit().putString(KEY_HTTP_URL_CEA, url).apply()
+
 }

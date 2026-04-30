@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.example.socialroboticslab.http.HttpChatActivity
+import com.example.socialroboticslab.http.HttpChatActivity_CEA
 import com.example.socialroboticslab.streaming.VideoStreamActivity
 import com.example.socialroboticslab.util.PrefsManager
 import com.example.socialroboticslab.videocall.VideoCallLobbyActivity
@@ -37,6 +38,8 @@ class UnitEntryActivity : AppCompatActivity() {
         const val UNIT_VIDEO_STREAM = "video_stream"
         const val UNIT_VIDEO_CALL = "video_call"
         const val UNIT_WOZ = "woz"
+
+        const val UNIT_HTTP_CHAT_CEA = "http_chat_cea"
 
         fun createIntent(context: Context, unitId: String): Intent =
             Intent(context, UnitEntryActivity::class.java).putExtra(EXTRA_UNIT_ID, unitId)
@@ -125,6 +128,14 @@ class UnitEntryActivity : AppCompatActivity() {
                 loadUrl = { PrefsManager.getWozUrl(it) },
                 saveUrl = { ctx, value -> PrefsManager.setWozUrl(ctx, value) },
                 targetActivity = WozRobotActivity::class.java,
+            )
+            UNIT_HTTP_CHAT_CEA -> UnitConfig(
+                title = "Co-Eating Agent",
+                description = "先確認本次要連的 HTTP server，再決定是否先送 hello 讓後端主動開場。",
+                loadUrl = { PrefsManager.getHttpUrl(it) },
+                saveUrl = { ctx, value -> PrefsManager.setHttpUrl(ctx, value) },
+                targetActivity = HttpChatActivity_CEA::class.java,
+                supportsAutoHello = true,
             )
             else -> error("Unknown unit id: $unitId")
         }

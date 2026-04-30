@@ -26,6 +26,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var etTurnUser: EditText
     private lateinit var etTurnPass: EditText
     private lateinit var etWozUrl: EditText
+    private lateinit var etHttpUrl_CEA: EditText
 
     // ── Status indicators ────────────────────────────────────────────────────
     private lateinit var statusHttpUrl: TextView
@@ -37,9 +38,10 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var statusTurnUrl: TextView
     private lateinit var statusTurnUser: TextView
     private lateinit var statusTurnPass: TextView
+    private lateinit var statusHttpUrl_CEA: TextView
 
     // ── Navigation ───────────────────────────────────────────────────────────
-    private enum class Section { CH2, CH3, CH4, CH5, CH6, WEBRTC }
+    private enum class Section { CH2, CH3, CH4, CH5, CH6, WEBRTC, CEA }
 
     private data class NavIds(val navId: Int, val accentId: Int, val titleId: Int, val subId: Int)
     private data class NavViews(val nav: LinearLayout, val accent: View, val title: TextView, val sub: TextView)
@@ -51,6 +53,7 @@ class SettingsActivity : AppCompatActivity() {
         Section.CH5    to NavIds(R.id.navCh5,    R.id.navCh5Accent,    R.id.navCh5Title,    R.id.navCh5Sub),
         Section.CH6    to NavIds(R.id.navCh6,    R.id.navCh6Accent,    R.id.navCh6Title,    R.id.navCh6Sub),
         Section.WEBRTC to NavIds(R.id.navWebrtc, R.id.navWebrtcAccent, R.id.navWebrtcTitle, R.id.navWebrtcSub),
+        Section.CEA    to NavIds(R.id.navCEA,    R.id.navCEAAccent,    R.id.navCEATitle,    R.id.navCEASub),
     )
 
     private val sectionIds = mapOf(
@@ -60,6 +63,7 @@ class SettingsActivity : AppCompatActivity() {
         Section.CH5    to R.id.sectionCh5,
         Section.CH6    to R.id.sectionCh6,
         Section.WEBRTC to R.id.sectionWebrtc,
+        Section.CEA    to R.id.sectionCh2,
     )
 
     // Cached view references, populated in onCreate
@@ -105,6 +109,7 @@ class SettingsActivity : AppCompatActivity() {
         etTurnUser        = findViewById(R.id.etTurnUser)
         etTurnPass        = findViewById(R.id.etTurnPass)
         etWozUrl          = findViewById(R.id.etWozUrl)
+        etHttpUrl_CEA         = findViewById(R.id.etHttpUrl_CEA)
 
         statusHttpUrl         = findViewById(R.id.statusHttpUrl)
         statusWsAudioUrl      = findViewById(R.id.statusWsAudioUrl)
@@ -115,6 +120,7 @@ class SettingsActivity : AppCompatActivity() {
         statusTurnUrl         = findViewById(R.id.statusTurnUrl)
         statusTurnUser        = findViewById(R.id.statusTurnUser)
         statusTurnPass        = findViewById(R.id.statusTurnPass)
+        statusHttpUrl_CEA         = findViewById(R.id.statusHttpUrl_CEA)
     }
 
     private fun cacheNavViews() {
@@ -174,6 +180,7 @@ class SettingsActivity : AppCompatActivity() {
         addAutoSave(etTurnUrl,         { PrefsManager.setTurnUrl(this, it) },         statusTurnUrl)
         addAutoSave(etTurnUser,        { PrefsManager.setTurnUser(this, it) },        statusTurnUser)
         addAutoSave(etTurnPass,        { PrefsManager.setTurnPass(this, it) },        statusTurnPass)
+        addAutoSave(etHttpUrl_CEA,     { PrefsManager.setHttpUrl_CEA(this, it) },     statusHttpUrl_CEA)
     }
 
     private fun addAutoSave(et: EditText, save: (String) -> Unit, status: TextView) {
@@ -221,6 +228,7 @@ class SettingsActivity : AppCompatActivity() {
         etTurnUser.setText(PrefsManager.getTurnUser(this))
         etTurnPass.setText(PrefsManager.getTurnPass(this))
         etWozUrl.setText(PrefsManager.getWozUrl(this))
+        etHttpUrl_CEA.setText(PrefsManager.getHttpUrl_CEA(this))
     }
 
     private fun resetDefaults() {
