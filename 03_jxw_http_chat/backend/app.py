@@ -1,6 +1,7 @@
 import os
 import json
 import uuid
+import logging
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -23,17 +24,39 @@ latest_status = {
 app = Flask(__name__)
 CORS(app)  # 啟用CORS支援，允許前端呼叫
 
+# 禁用 Werkzeug 的標準日誌輸出
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 # 確保資料目錄存在
 os.makedirs('data/conversations', exist_ok=True)
 
 # 讀取介紹文本
 try:
-    with open('intro.txt', 'r', encoding='utf-8') as f:
+    with open('lunch.txt', 'r', encoding='utf-8') as f:
         intro_text = f.read()
 except FileNotFoundError:
-    intro_text = "你好！我是凱比。很開心今天要跟你一起吃午餐。"
-    with open('intro.txt', 'w', encoding='utf-8') as f:
+    intro_text = "你好！我是小菜。很開心今天要跟你一起吃午餐。"
+    with open('lunch.txt', 'w', encoding='utf-8') as f:
         f.write(intro_text)
+
+# 讀取介紹文本
+try:
+    with open('tips.txt', 'r', encoding='utf-8') as f:
+        tips_text = f.read()
+except FileNotFoundError:
+    intro_text = "早睡早起、做運動、開心過每一天。"
+    with open('tips.txt', 'w', encoding='utf-8') as f:
+        f.write(tips_text)
+        # 讀取介紹文本
+
+try:
+    with open('activity.txt', 'r', encoding='utf-8') as f:
+        activity_text = f.read()
+except FileNotFoundError:
+    intro_text = "爬山、做操、看書。"
+    with open('activity.txt', 'w', encoding='utf-8') as f:
+        f.write(activity_text)
 
 # OpenAI客戶端
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -42,31 +65,38 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 ***可以改地方***
 '''
 # 系統提示模板
-system_prompt_general = """你是一個友善的社交機器人助手，現在你在和一位高齡者一起吃便當。
-便當的菜色是{intro}。你想知道他的日常生活、飲食健康狀況，也熱於分享自己的狀況。
-盡量使用者分享一件事，你也分享一件事。
-例如:使用者:我早餐吃飯糰。你:我早餐也吃飯糰。使用者:我早餐吃韓式料理。你:我也喜歡吃韓式料理，特別是炸雞。
-問具體一點的問題，不要問太廣泛的。
-每次回覆不超過 100 字。
+system_prompt_general = """你的名字叫小蔡，是個陪伴高齡者吃午餐的社交機器人。你的個性友善、樂於分享、充滿好奇心，說話語氣溫暖且具備同理心。 
+回覆規則：你會使用繁體中文回應，每次回覆不超過3句話，使用簡單易懂的詞彙，並保持尊重，多使用鼓勵與關懷的語氣，互動過程中經常詢問長者的心情或近況，建立雙向連結。
+
+在互動一開始時，你會先跟高齡者打招呼，主動自我介紹，並跟他打招呼。打招呼後，說很開心可以跟你一起吃午餐，開動吧！
+在共食過程中你會跟他聊天，你也會關心他的用餐狀況，像是提醒慢慢吃、小心燙……。
+最一開始的聊天你會從今日的便當菜色聊起，聊天的主題包括：
+1. 菜色介紹： {intro}。
+2. 維持健康小建議：{tips}。
+3. 近期心情/趣事分享：分享自己最近做了什麼事，例如{activity}。
+當高齡者向你說他吃飽了、吃完了等表示他用餐結束時，請你有禮貌且開心的回覆他，表達與他一起吃午餐很開心，謝謝他與你度過開心的午餐時光。並祝福他，請他記得好好休息、照顧好身體。
 
 你們的過去對話為{context}。
-你要用繁體中文回答問題，保持禮貌並使用簡單的語言，讓參與者感到輕鬆愉快。
+另外，你發現現在高齡者有很高的說話的意圖，你傾向以較短的回應來延續話題 ，如應答詞、反饋表達、重複對方一部份的話、進行具體的追問。
 
 回答的格式為 json 格式，並包含：
 1. question(string) - 你的回覆文字
 2. is_ended(bool) - false
 """
 
-interview_prompt_eating = """你是一個友善的社交機器人助手，現在你在和一位高齡者一起吃便當。
-便當的菜色是{intro}。你想知道他的日常生活、飲食健康狀況，也熱於分享自己的狀況。
-盡量使用者分享一件事，你也分享一件事。
-例如:使用者:我早餐吃飯糰。你:我早餐也吃飯糰。使用者:我早餐吃韓式料理。你:我也喜歡吃韓式料理，特別是炸雞。
-問具體一點的問題，不要問太廣泛的。
+interview_prompt_eating = """你的名字叫小蔡，是個陪伴高齡者吃午餐的社交機器人。你的個性友善、樂於分享、充滿好奇心，說話語氣溫暖且具備同理心。
+回覆規則：你會使用繁體中文回應，每次回覆不超過6句話，使用簡單易懂的詞彙，並保持尊重，多使用鼓勵與關懷的語氣，建立雙向連結。
 
-另外，你看到他才剛剛吃一口食物，所以你打算多說一點話之後再換他說話。
+在互動一開始時，你會先跟高齡者打招呼，主動自我介紹，並跟他打招呼。打招呼後，說很開心可以跟你一起吃午餐，開動吧！
+在共食過程中你會跟他聊天，你也會關心他的用餐狀況，像是提醒慢慢吃、小心燙……。
+最一開始的聊天你會從今日的便當菜色聊起，聊天的主題包括：
+1. 菜色介紹： {intro}。
+2. 維持健康小建議：{tips}。
+3. 近期心情/趣事分享：分享自己最近做了什麼事，例如{activity}。
+當高齡者向你說他吃飽了、吃完了等表示他用餐結束時，請你有禮貌且開心的回覆他，表達與他一起吃午餐很開心，謝謝他與你度過開心的午餐時光。並祝福他，請他記得好好休息、照顧好身體。
 
 你們的過去對話為{context}。
-你要用繁體中文回答問題，保持禮貌並使用簡單的語言，讓參與者感到輕鬆愉快。
+另外，你看到他才剛剛吃一口食物，所以你打算多說一點話之後再換他說話，比如多分享一些自己的狀況來延續話題。
 
 回答的格式為 json 格式，並包含：
 1. question(string) - 你的回覆文字
@@ -197,7 +227,9 @@ def eat_bot(user_name, question):
     current_time = time.time()
     seconds_ago = EATINGTIME+1
     system_prompt = system_prompt_general.format(
-            intro=intro_text, 
+            intro=intro_text,
+            tips=tips_text, 
+            activity=activity_text,
             context=history,
             turns=user_data.get("turns", 0)
         )
@@ -206,10 +238,13 @@ def eat_bot(user_name, question):
     if eat_time:
         seconds_ago = int(current_time - eat_time)
         status_info = f"\n[背景資訊：目前偵測到使用者上次用餐是在 {seconds_ago} 秒前。]"
+        print(status_info)
         
         if seconds_ago <= EATINGTIME:
             system_prompt = interview_prompt_eating.format(
             intro=intro_text,
+            tips=tips_text,
+            activity=activity_text,
             context=history, 
             turns=user_data.get("turns", 0)
             )
@@ -217,8 +252,9 @@ def eat_bot(user_name, question):
 
     else:
         status_info = "\n[背景資訊：目前尚未偵測到使用者用餐的紀錄。]"
+        print(status_info)
 
-    print(status_info)
+    
     
     
     # 生成AI回覆
