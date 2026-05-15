@@ -55,10 +55,11 @@ class HttpChatActivity_CEA : AppCompatActivity() {
 
     // State
     private val personalityType = "e"
-    private val userName = "android_user"
+    private var userName = "co_eating_user"
     private var isEnding = false
     private var shouldAutoHello = false
     private var initialMessage = "hello"
+
 
     // 動作對應表
     private val motionMap = mapOf(
@@ -78,6 +79,11 @@ class HttpChatActivity_CEA : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_http_chat)
+
+        val receivedName = intent.getStringExtra("EXTRA_USER_NAME")
+        if (!receivedName.isNullOrBlank()) {
+            this.userName= receivedName
+        }
 
         videoView = findViewById(R.id.videoView)
         tvSubtitle = findViewById(R.id.tvSubtitle)

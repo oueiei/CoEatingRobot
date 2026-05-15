@@ -52,6 +52,8 @@ class UnitEntryActivity : AppCompatActivity() {
     private lateinit var etInitialMessage: EditText
     private lateinit var btnStart: Button
 
+    private lateinit var etUserName: EditText
+
     private lateinit var config: UnitConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +69,7 @@ class UnitEntryActivity : AppCompatActivity() {
         switchAutoHello = findViewById(R.id.switchAutoHello)
         etInitialMessage = findViewById(R.id.etInitialMessage)
         btnStart = findViewById(R.id.btnStartUnit)
+        etUserName = findViewById(R.id.etUserName)
 
         config = resolveConfig(intent.getStringExtra(EXTRA_UNIT_ID))
 
@@ -131,7 +134,7 @@ class UnitEntryActivity : AppCompatActivity() {
             )
             UNIT_HTTP_CHAT_CEA -> UnitConfig(
                 title = "Co-Eating Agent",
-                description = "先確認本次要連的 HTTP server，再決定是否先送 hello 讓後端主動開場。",
+                description = "先確認本次要連的 HTTP server，再傳送使用者名稱。",
                 loadUrl = { PrefsManager.getHttpUrl_CEA(it) },
                 saveUrl = { ctx, value -> PrefsManager.setHttpUrl_CEA(ctx, value) },
                 targetActivity = HttpChatActivity_CEA::class.java,
@@ -143,9 +146,11 @@ class UnitEntryActivity : AppCompatActivity() {
 
     private fun launchUnit() {
         val serverUrl = etServerUrl.text.toString().trim()
+        val inputUserName = etUserName.text.toString().trim().ifBlank { "android_user" } // 取得輸入，若空白則用預設值
         config.saveUrl(this, serverUrl)
 
         val launchIntent = Intent(this, config.targetActivity).apply {
+            putExtra("EXTRA_USER_NAME", inputUserName)
             if (config.supportsAutoHello && switchAutoHello.isChecked) {
                 putExtra(EXTRA_AUTO_HELLO, true)
                 putExtra(

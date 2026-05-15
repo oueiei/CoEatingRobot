@@ -15,7 +15,7 @@ import json
 SERVER_URL = "http://localhost:8000"
 # =======================================
 
-USER_NAME = "terminal_user"
+USER_NAME = "terminal_user_0508"
 
 
 def chat(message: str) -> dict:
