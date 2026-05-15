@@ -15,5 +15,8 @@ env/
 data/*
 !data/conversations/.gitkeep
 
+data/*
+!data/eating/.gitkeep
+
 # Docker
 .docker/
