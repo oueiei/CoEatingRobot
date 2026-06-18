@@ -54,6 +54,8 @@ class UnitEntryActivity : AppCompatActivity() {
 
     private lateinit var etUserName: EditText
 
+    private lateinit var etUserNum: EditText
+
     private lateinit var config: UnitConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +72,7 @@ class UnitEntryActivity : AppCompatActivity() {
         etInitialMessage = findViewById(R.id.etInitialMessage)
         btnStart = findViewById(R.id.btnStartUnit)
         etUserName = findViewById(R.id.etUserName)
+        etUserNum = findViewById(R.id.etUserNum)
 
         config = resolveConfig(intent.getStringExtra(EXTRA_UNIT_ID))
 
@@ -147,10 +150,12 @@ class UnitEntryActivity : AppCompatActivity() {
     private fun launchUnit() {
         val serverUrl = etServerUrl.text.toString().trim()
         val inputUserName = etUserName.text.toString().trim().ifBlank { "android_user" } // 取得輸入，若空白則用預設值
+        val inputUserNum = etUserNum.text.toString().trim().ifBlank { "1" } // 取得輸入，若空白則用預設值
         config.saveUrl(this, serverUrl)
 
         val launchIntent = Intent(this, config.targetActivity).apply {
             putExtra("EXTRA_USER_NAME", inputUserName)
+            putExtra("EXTRA_USER_NUM", inputUserNum)
             if (config.supportsAutoHello && switchAutoHello.isChecked) {
                 putExtra(EXTRA_AUTO_HELLO, true)
                 putExtra(

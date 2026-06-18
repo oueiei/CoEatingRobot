@@ -34,6 +34,7 @@ class ExpressionVideoHelper(private val context: Context) {
         "e_surprise" to R.raw.e_surprise_s,
         "e_scared" to R.raw.e_scared_s,
         "e_disgusted" to R.raw.e_disgusted_n,
+        "e_excited" to R.raw.e_excited_s,
         // Introvert - Status
         "i_idling" to R.raw.i_neutral_n,
         "i_thinking" to R.raw.i_thinking_n,
@@ -48,6 +49,7 @@ class ExpressionVideoHelper(private val context: Context) {
         "i_surprise" to R.raw.i_surprise_s,
         "i_scared" to R.raw.i_scared_s,
         "i_disgusted" to R.raw.i_disgusted_n,
+        "i_excited" to R.raw.i_excited_s
     )
 
     /**

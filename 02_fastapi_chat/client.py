@@ -15,14 +15,15 @@ import json
 SERVER_URL = "http://localhost:8000"
 # =======================================
 
-USER_NAME = "terminal_user_0508"
+USER_NAME = "terminal_user"
+USER_NUM = "0520"
 
 
 def chat(message: str) -> dict:
     """發送訊息到伺服器"""
     response = requests.post(
         f"{SERVER_URL}/api/chat",
-        json={"message": message, "user_name": USER_NAME},
+        json={"message": message, "user_name":  USER_NAME, "user_id": USER_NUM},
     )
     return response.json()
 

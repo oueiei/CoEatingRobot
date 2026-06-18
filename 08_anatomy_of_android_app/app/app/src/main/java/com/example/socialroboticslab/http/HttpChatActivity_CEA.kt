@@ -56,6 +56,9 @@ class HttpChatActivity_CEA : AppCompatActivity() {
     // State
     private val personalityType = "e"
     private var userName = "co_eating_user"
+
+    private var userNum = "1"
+
     private var isEnding = false
     private var shouldAutoHello = false
     private var initialMessage = "hello"
@@ -83,6 +86,11 @@ class HttpChatActivity_CEA : AppCompatActivity() {
         val receivedName = intent.getStringExtra("EXTRA_USER_NAME")
         if (!receivedName.isNullOrBlank()) {
             this.userName= receivedName
+        }
+
+        val receivedNum = intent.getStringExtra("EXTRA_USER_NUM")
+        if (!receivedNum.isNullOrBlank()) {
+            this.userNum= receivedNum
         }
 
         videoView = findViewById(R.id.videoView)
@@ -280,14 +288,27 @@ class HttpChatActivity_CEA : AppCompatActivity() {
             }
             "speaking_and_eating" -> {
                 val expressionEmotion = if (!emotion.isNullOrBlank()) emotion else "neutral"
-                playExpression(expressionEmotion, loop = true)
+                var finalSpeechText = resultText
 
                 tvSubtitle.text = ""
-                mRobotAPI.startTTS("好吃、好吃。")
 
-                if (!resultText.isNullOrBlank()) {
-                    tvSubtitle.text = ""
-                    mRobotAPI.startTTS(resultText)
+                // 1. 定義隨機吃東西的擬聲詞列表
+                val eatSounds = listOf("啊姆。", "啊姆、啊姆。", "嚼嚼。", "好吃！","咖滋 咖滋")
+
+                // 2. 隨機挑選一句
+                val randomEatSound = eatSounds.random()
+                // 2. 根據 50% 機率，組裝最終要讓機器人說話的文字 (Speech Text)
+                // 如果隨機成功，就把「啊姆。」加在 AI 回覆 (resultText) 的前面
+                if (Math.random() > 0.5){
+                    finalSpeechText = "$randomEatSound $resultText"
+                }
+
+                // 先播高興表情
+                playExpression("excited", loop = true)
+
+
+                if (!finalSpeechText.isNullOrBlank()) {
+                    mRobotAPI.startTTS(finalSpeechText)
                 }
             }
             "ending" -> {
@@ -311,7 +332,6 @@ class HttpChatActivity_CEA : AppCompatActivity() {
         val motion = motionMap[status] ?: return
         if (motion.isNotEmpty()) {
             if (status != "thinking" || Math.random() > 0.5) {
-
                 mRobotAPI.motionPlay(motion, true)
             }
         }
@@ -326,7 +346,7 @@ class HttpChatActivity_CEA : AppCompatActivity() {
         val json = JSONObject().apply {
             put("message", message)
             put("user_name", userName)
-            put("user_id", userName)
+            put("user_id", userNum)
             put("robot_mbti", personalityType.uppercase())
         }
         val body = json.toString().toRequestBody("application/json".toMediaType())
