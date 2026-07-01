@@ -15,7 +15,7 @@ class EatingModel:
     label_con = False
 
 
-    def __init__(self, model_path="model_unquant.tflite", label_path="labels.txt"):
+    def __init__(self, model_path="model_unquant_f_0701.tflite", label_path="labels.txt"):
             self.interpreter = tf.lite.Interpreter(model_path=model_path)
             self.interpreter.allocate_tensors()
             self.input_details = self.interpreter.get_input_details()
