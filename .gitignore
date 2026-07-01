@@ -69,3 +69,6 @@ app/gradlew.bat
 .cxx/
 
 .frontend_apps/
+
+# Video
+.mp4

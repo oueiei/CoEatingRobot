@@ -44,7 +44,7 @@ log.setLevel(logging.ERROR)
 # 確保資料目錄存在
 os.makedirs('data/conversations', exist_ok=True)
 
-# 讀取介紹文本
+# 讀取食物介紹文本
 try:
     with open('lunch.txt', 'r', encoding='utf-8') as f:
         intro_text = f.read()
@@ -53,7 +53,7 @@ except FileNotFoundError:
     with open('lunch.txt', 'w', encoding='utf-8') as f:
         f.write(intro_text)
 
-# 讀取介紹文本
+# 讀取小技巧、活動介紹文本
 try:
     with open('tips.txt', 'r', encoding='utf-8') as f:
         tips_text = f.read()
