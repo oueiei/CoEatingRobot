@@ -74,7 +74,8 @@ def run_camera():
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret: break
-        frame = cv2.flip(frame, 1)   
+        frame = cv2.flip(frame, 1)
+        raw_frame = frame.copy()   
         current_time = time.time()
 
         # 如果有設定框框，就只切下框框內的影像給模型
@@ -138,8 +139,10 @@ def run_camera():
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 255), 1)
             cv2.putText(frame, "ROI DETECTION ACTIVE", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
 
+        #如果信心值高於0.8出現V符號
+        check_mark = "[V]" if conf > 0.8 else ""
 
-        status_text = f"Status: {label} ({conf:.2f})({eat_frequency:.2f})"
+        status_text = f"Status: {label} ({conf:.2f})({eat_frequency:.2f}) {check_mark}"
         cv2.putText(frame, status_text,(20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.8,(255, 200, 0),2)
 
         # --- 新增：如果在錄影狀態，畫面上顯示紅點提示，並寫入影片幀 ---
@@ -151,6 +154,8 @@ def run_camera():
             # 寫入影片檔案
             if video_writer:
                 video_writer.write(frame)
+            if raw_video_writer:
+                raw_video_writer.write(raw_frame)
 
 
         cv2.imshow("Camera Source", frame)
@@ -181,7 +186,8 @@ def run_camera():
                 height, width, _ = frame.shape
                 fourcc = cv2.VideoWriter_fourcc(*'mp4v') # 使用 MP4 編碼器
                 video_writer = cv2.VideoWriter(f"data/video/eating_video_{file_prefix}.mp4", fourcc, 20.0, (width, height))
-                
+                raw_video_writer = cv2.VideoWriter(f"data/raw_video/eating_video_{file_prefix}.mp4", fourcc, 20.0, (width, height))
+
                 is_recording = True
                 print("▶ 進入錄影與紀錄狀態。")
             else:
